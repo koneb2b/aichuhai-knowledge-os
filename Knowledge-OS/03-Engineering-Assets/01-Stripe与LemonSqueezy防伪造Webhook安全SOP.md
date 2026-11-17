@@ -108,6 +108,25 @@ export async function POST(req: Request) {
 }
 ```
 
+## 幂等表 DDL（`processed_events`）
+
+上面的 insert-first 抢占依赖一个 **`event_id` 唯一约束**；缺了它，重复插入会全部成功，幂等就失效。同时该表只应由服务端访问，不得对匿名/登录用户开放。
+
+```sql
+-- supabase/migrations/xxxx_processed_events.sql
+create table if not exists public.processed_events (
+  id uuid primary key default gen_random_uuid(),
+  event_id text not null unique,          -- 幂等的唯一键：抢占失败即视为已处理
+  processed_at timestamptz not null default now()
+);
+
+-- 只允许 service_role（绕过 RLS）访问；禁止 anon / authenticated 直读直写
+alter table public.processed_events enable row level security;
+revoke all on table public.processed_events from anon, authenticated;
+```
+
+> 保留策略：该表可定期清理（例如只留 90 天），但**清理窗口必须长于支付平台的 webhook 重试窗口**，否则旧事件重放会被当成新事件。
+
 ## LemonSqueezy 签名验证（无官方 SDK，自行 HMAC-SHA256）
 
 LemonSqueezy 使用 `x-signature` 头传递 HMAC-SHA256 签名，必须自行用 Node.js `crypto` 模块验证。

@@ -1,0 +1,3 @@
+# Knowledge-OS 工具链依赖（AUD-29：显式声明，避免 PyYAML 隐式依赖）
+# 安装：pip install -r Knowledge-OS/tools/requirements.txt
+PyYAML>=6.0

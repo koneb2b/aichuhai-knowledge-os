@@ -1,17 +1,17 @@
 ---
 title: "KGR长尾词挖掘与微SaaS逆向选品SOP"
 id: "RULE-KGR-001"
-version: "1.1.0"
+version: "1.2.0"
 source_url: "https://aichuhai.dev/sop/kgr-requirements"
 category: "01-Requirements"
-last_updated: "2026-08-13"
+last_updated: "2026-11-17"
 tags:
   - "选品"
   - "KGR"
   - "Ahrefs"
   - "微SaaS"
 quantitative_metrics:
-  - "月搜索量 (SV): 100 - 2500 次/月"
+  - "月搜索量 (SV): 100 次/月以上；SV > 1000 的高流量词按 KGR 阶梯直接弃用，改用 Opportunity Score 评估"
   - "关键词难度 (KD): KD <= 15"
   - "KGR 值: Allintitle 结果数 / 月搜索量，按 SV 阶梯阈值过滤（SV<250: <0.25 / SV 250-1000: <0.50 / SV>1000: 弃用）"
 domain: "requirements"
@@ -36,14 +36,16 @@ agent_rules:
 ## 选品核心哲学
 拦截已知精确流量，绝不教育市场。通过计算 Keyword Golden Ratio (KGR) 拦截 Google 尾部高意向买家流量。
 
-$$\text{KGR} = \frac{\text{Google 中包含完整标题的网页数 (allintitle)}}{\text{月度搜索量 (Monthly Search Volume, SV < 2500)}}$$
+$$\text{KGR} = \frac{\text{Google 中包含完整标题的网页数 (allintitle)}}{\text{月度搜索量 (Monthly Search Volume)}}$$
+
+> **适用边界**：KGR 只适用于 **SV ≤ 1000** 的长尾词。SV > 1000 时 KGR 方法失效（阈值不再具备判别力），必须改用 Opportunity Score 评估。
 
 > **KGR 阶梯阈值（按搜索量分层）**：
 > | 月搜索量范围 | 推荐 KGR 阈值 | 说明 |
 > |---|---|---|
 > | SV < 250 | KGR < 0.25 | 经典 KGR 区间，竞争最小 |
 > | SV 250 – 1000 | KGR < 0.50 | 中等尾部，需结合 KD 交叉验证 |
-> | SV > 1000 | KGR < 1.00 或弃用 | 偏高流量词，KGR 方法失效风险大，建议以 Opportunity Score 替代 |
+> | SV > 1000 | 弃用 | 高流量词 KGR 方法失效，改用 Opportunity Score 评估 |
 
 ## 标准操作路径 (SOP)
 1. **种子词导出**：在 Ahrefs/Semrush 输入竞争对手大工具名称，过滤 KD <= 15，导出关键词 CSV。

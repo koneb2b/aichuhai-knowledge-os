@@ -80,7 +80,8 @@ pdf to markdown for notion,90,5,8,2,5,0.9,
 ├── README.md                           本文件
 ├── opencode.json                       Agent 规则接入配置（AGENTS.md 引用来源）
 ├── .cursorrules                        Cursor 规则同步（27 条）
-└── 项目知识库深度分析报告.md            深度分析 + 实施清单 + 复审记录
+├── .gitignore                          git 忽略规则（会话状态 / 工具输出 / 密钥）
+└── 99-Archive/项目知识库深度分析报告.md  历史快照（已归档，勿据此决策）
 ```
 
 ## 规则体系（27 条编译规则，5 域全覆盖）
@@ -107,4 +108,4 @@ pdf to markdown for notion,90,5,8,2,5,0.9,
 - SOP frontmatter 必须含：`title` / `id` / `version` / `category` / `last_updated` / `domain` / `agent_rules`。
 - `agent_rules` 每项含：`id`（域内唯一）/ `priority` / `enforcement` / `overridable` / `rule`（英文，供 Agent 直接使用）。
 - 修改文档后同步更新 `last_updated`；废弃文档转 `status: deprecated` + `merged_into` 指引。
-- 已合并文件（frontmatter 标注 `deprecated`）可以在 shell 环境恢复后物理删除，见 `项目知识库深度分析报告.md` 附录。
+- 已合并文件（frontmatter 标注 `deprecated`）可以在 shell 环境恢复后物理删除，见 `99-Archive/项目知识库深度分析报告.md` 附录。

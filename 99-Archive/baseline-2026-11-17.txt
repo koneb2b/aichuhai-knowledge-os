@@ -1,0 +1,39 @@
+﻿Knowledge-OS baseline — 2026-11-17 (Sprint 0.5)
+git: 59337c5
+
+=== 1) python Knowledge-OS/tools/compile_rules.py ===
+[OK] Generated: D:\aichuhai-knowledge-os\Knowledge-OS\07-Agent-Rules\generated\requirements-rules.md (4 rules)
+[OK] Generated: D:\aichuhai-knowledge-os\Knowledge-OS\07-Agent-Rules\generated\engineering-assets-rules.md (9 rules)
+[OK] Generated: D:\aichuhai-knowledge-os\Knowledge-OS\07-Agent-Rules\generated\seo-geo-rules.md (5 rules)
+[OK] Generated: D:\aichuhai-knowledge-os\Knowledge-OS\07-Agent-Rules\generated\cro-marketing-rules.md (3 rules)
+[OK] Generated: D:\aichuhai-knowledge-os\Knowledge-OS\07-Agent-Rules\generated\operations-rules.md (6 rules)
+
+Rule Compilation Succeeded! Total Rules: 27
+exit=0
+
+=== 2) python Knowledge-OS/tools/test_compile_rules.py ===
+============================================================
+  测试结果: 27 通过, 0 失败 / 27 总计
+============================================================
+exit=0
+
+=== 3) python Knowledge-OS/tools/gen_index.py --check ===
+[OK] 全部一致：27 条规则 / 5 域 / 7 个文档目录 / 版本 2026-11-17
+exit=0
+
+=== 4) python Knowledge-OS/tools/run_pipeline.py sample_keywords.csv --all ===
+[OK] Generated 5 PRD file(s) in D:\aichuhai-knowledge-os\Knowledge-OS\tools\output\prd
+
+=== RUN: C:\Users\Administrator\AppData\Local\Programs\Python\Python314\python.exe D:\aichuhai-knowledge-os\Knowledge-OS\tools\auto_select.py D:\aichuhai-knowledge-os\Knowledge-OS\tools\sample_keywords.csv --output-dir D:\aichuhai-knowledge-os\Knowledge-OS\tools\output ===
+
+=== RUN: C:\Users\Administrator\AppData\Local\Programs\Python\Python314\python.exe D:\aichuhai-knowledge-os\Knowledge-OS\tools\auto_generate_prd.py D:\aichuhai-knowledge-os\Knowledge-OS\tools\output\selected_candidates.json --output-dir D:\aichuhai-knowledge-os\Knowledge-OS\tools\output\prd --all ===
+[OK] D:\aichuhai-knowledge-os\Knowledge-OS\tools\output\deployment.md
+
+=== PIPELINE DONE ===
+  Candidates JSON : D:\aichuhai-knowledge-os\Knowledge-OS\tools\output\selected_candidates.json
+  Candidates MD   : D:\aichuhai-knowledge-os\Knowledge-OS\tools\output\selected_candidates.md
+  PRDs            : D:\aichuhai-knowledge-os\Knowledge-OS\tools\output\prd
+  Deploy manifest : D:\aichuhai-knowledge-os\Knowledge-OS\tools\output\deployment.md
+
+[Next] 按 deployment.md 检查单搭建脚手架, 7 天内上线 MVP (CASE-001-A).
+exit=0
