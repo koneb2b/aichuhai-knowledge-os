@@ -1,0 +1,41 @@
+# AI 产品出海开发与工程风控避坑规则 (.cursorrules)
+# 自动同步于 Knowledge-OS 规则编译系统
+# 生效规则数: 27 (2026-11-17)
+
+## 1. 架构与数据库安全 (Architecture & DB) [BLOCK]
+- **Supabase 连接池**: Serverless/Next.js 环境必须使用 6543 端口 (Transaction Pooler)，严禁直连 5432（Error 42P05）。
+- **Prepared Statements**: Transaction Pooler 模式下必须关闭服务端预编译（`prepare: false` 或 `pgbouncer=true`）。
+- **Edge Runtime**: 严禁在 Edge Runtime 中引入 C++ 原生模块（图像处理等），避免冷启动爆炸。
+
+## 2. 支付与 Webhook 验签 (Payment Security) [BLOCK]
+- **Raw Body 验签**: 必须使用 `req.text()` 原始字节串校验签名，严禁 `req.json()`。
+- **幂等性保障**: 数据库必须对 `event_id` 设置 UNIQUE 约束，阻止重放。
+- **LemonSqueezy**: 使用 `crypto.createHmac("sha256", secret).update(body).digest("hex")` + `timingSafeEqual` 自行验签（无官方 SDK）。
+- **MoR 合规**: 必须使用 LemonSqueezy/Paddle 作为 Merchant of Record 处理跨境税务，严禁裸用 Stripe 个人账户。
+
+## 3. 限流与 API 成本风控 (API Shield) [BLOCK]
+- **Upstash 滑动限流**: 所有公共 LLM API 路由必须挂载滑动窗口限流，设置逐层级配额（匿名 3/24h → 免费 10/24h → 付费 100/min）。
+- **TCP 禁止**: Serverless 下必须使用 HTTP/REST 协议的 Upstash 客户端，禁用 TCP Redis。
+- **AbortController**: LLM 调用必须设置 15 秒硬超时 + 逐用户 Token 消费硬顶。
+
+## 4. SEO & GEO 生成式引擎收录 (SEO Standard) [MUST]
+- **llms.txt**: 必须在 `public/` 部署 `/llms.txt` 和 `/llms-full.txt`。
+- **JSON-LD Schema**: 工具页面必须注入 `SoftwareApplication` + `WebApplication` 类型结构化数据。
+- **IndexNow**: 每次发布新页面必须通过 IndexNow API 推送至 Bing/Yandex。
+- **pSEO 灰度**: 首批 PSEO 页面严格控制在 10–30 页，包含独家交互数据，观察 GSC 28 天后再扩容。
+- **风险声明**: pSEO 策略存在被 Google SpamBrain 识别降权的固有风险，灰度节奏不保证免罚。
+
+## 5. CRO 与分发避坑 (Distribution & CRO) [MUST]
+- **无摩擦体验**: 严禁一进站强制注册，实施体验前置（免登录使用 → 导出时弹出付费墙）。
+- **Reddit 冷启动**: 新账号严禁直接发产品外链，应先撰写技术/踩坑故事帖建立信任。
+- **价格锚点**: $9.9/月（订阅）vs $19.9（买断）引导长期订阅。
+
+## 6. 成本熔断 (Operations) [BLOCK]
+- **账单硬顶**: 所有 OpenAI/Claude API Key 必须设置每日/每月硬顶 + Webhook 熔断告警。
+- **GSC 监控**: 每周检查 GSC 爬虫异常和收录曲线。
+
+## 7. 隐私合规 (Privacy) [SHOULD]
+- **Cookie Consent**: 面向欧盟/加州用户必须部署 Cookie 同意横幅。
+- **数据删除**: 提供 `/account/delete` 端点以满足 GDPR 第 17 条被遗忘权。
+- **税务合规**: 跨境税务由 MoR（LemonSqueezy/Paddle）代收代缴；仅自行申报时使用 Stripe Tax。
+- **日志脱敏**: 不记录完整 LLM Prompt/Response 到日志，仅记录 token 用量。

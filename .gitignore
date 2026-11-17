@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# 依赖与环境
+node_modules/
+.env
+.env.*
+!.env.example
+
+# 工具 / 会话状态（非知识资产，AUD-28）
+.omo/
+.codegraph/
+Knowledge-OS/.obsidian/workspace.json
+
+# 工具输出（可由 tools/run_pipeline.py 重跑生成）
+Knowledge-OS/tools/output/

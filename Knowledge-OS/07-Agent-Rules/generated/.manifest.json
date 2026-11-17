@@ -1,0 +1,10 @@
+{
+  "generated_files": [
+    "requirements-rules.md",
+    "engineering-assets-rules.md",
+    "seo-geo-rules.md",
+    "cro-marketing-rules.md",
+    "operations-rules.md"
+  ],
+  "total_rules": 27
+}

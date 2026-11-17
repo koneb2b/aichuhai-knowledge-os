@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "Knowledge-OS/AGENTS.md",
+    "Knowledge-OS/07-Agent-Rules/generated/requirements-rules.md",
+    "Knowledge-OS/07-Agent-Rules/generated/engineering-assets-rules.md",
+    "Knowledge-OS/07-Agent-Rules/generated/seo-geo-rules.md",
+    "Knowledge-OS/07-Agent-Rules/generated/cro-marketing-rules.md",
+    "Knowledge-OS/07-Agent-Rules/generated/operations-rules.md"
+  ]
+}
