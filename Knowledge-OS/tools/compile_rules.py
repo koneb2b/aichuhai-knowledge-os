@@ -105,7 +105,7 @@ def compile_rules(dry_run=False):
 
         rules.sort(key=lambda x: (-x["priority"], x["id"]))
 
-        with open(output_path, "w", encoding="utf-8") as f:
+        with open(output_path, "w", encoding="utf-8", newline="\n") as f:
             f.write(HEADER_COMMENT + "\n")
             f.write(f"# Compiled Domain Rules: {domain.upper()}\n\n")
             for r in rules:
@@ -116,7 +116,7 @@ def compile_rules(dry_run=False):
         manifest_data["total_rules"] += len(rules)
         print(f"[OK] Generated: {output_path} ({len(rules)} rules)")
 
-    with open(MANIFEST_PATH, "w", encoding="utf-8") as f:
+    with open(MANIFEST_PATH, "w", encoding="utf-8", newline="\n") as f:
         json.dump(manifest_data, f, indent=2)
 
     print(f"\nRule Compilation Succeeded! Total Rules: {manifest_data['total_rules']}\n")
