@@ -13,9 +13,12 @@ python Knowledge-OS/tools/compile_rules.py
 
 # 2. 静态验证（27 项检查：manifest、文件完整性、规则格式、去重、域覆盖）
 python Knowledge-OS/tools/test_compile_rules.py
+
+# 3. 规则契约闸门（重新解析 SOP 并重算期望产物；手改生成物 / 改完忘编译 → 退出码 1）
+python Knowledge-OS/tools/check_rules.py
 ```
 
-> 生成文件目录为 `Knowledge-OS/07-Agent-Rules/generated/`（编译产物，勿手改；HEADER 已注明）。
+> 生成物为 `Knowledge-OS/07-Agent-Rules/generated/`（5 个域规则文件 + manifest）与根目录 `.cursorrules`，均由 `compile_rules.py` 生成，勿手改（HEADER 已注明）。手改会被 `check_rules.py` 判为漂移。
 
 ## 自动化工具链（从蓝海需求到 MVP 落地）
 
@@ -47,6 +50,7 @@ pdf to markdown for notion,90,5,8,2,5,0.9,
 | `push_indexnow.py` | IndexNow 批量推送（单条或 URLs 文件，≤10000/批） | GEO-001-B |
 | `compile_rules.py` | 规则编译 | Document-as-Code |
 | `gen_index.py` | 校验文档中的规则数/文档数/文件名是否与事实一致（`--check`） | — |
+| `check_rules.py` | 规则契约闸门：schema / ID 唯一 / 消费端覆盖 / 漂移 / 清单（任一失败退出码 1） | 全部 27 条 |
 | `test_compile_rules.py` | 27 项静态验证 | — |
 
 > ⚠️ **数据来源说明**：`sv`/`kd`/`allintitle` 需从 Ahrefs/Semrush 导出后填入 CSV（工具无网络爬取能力）；评分维度可手工优化后重跑，成本为零。
@@ -79,7 +83,7 @@ pdf to markdown for notion,90,5,8,2,5,0.9,
 📦 根目录
 ├── README.md                           本文件
 ├── opencode.json                       Agent 规则接入配置（AGENTS.md 引用来源）
-├── .cursorrules                        Cursor 规则同步（27 条）
+├── .cursorrules                        Cursor 规则同步（27 条）｜生成物，勿手改
 ├── .gitignore                          git 忽略规则（会话状态 / 工具输出 / 密钥）
 └── 99-Archive/项目知识库深度分析报告.md  历史快照（已归档，勿据此决策）
 ```
@@ -109,3 +113,4 @@ pdf to markdown for notion,90,5,8,2,5,0.9,
 - `agent_rules` 每项含：`id`（域内唯一）/ `priority` / `enforcement` / `overridable` / `rule`（英文，供 Agent 直接使用）。
 - 修改文档后同步更新 `last_updated`；废弃文档转 `status: deprecated` + `merged_into` 指引。
 - 已合并文件（frontmatter 标注 `deprecated`）可以在 shell 环境恢复后物理删除，见 `99-Archive/项目知识库深度分析报告.md` 附录。
+- `.cursorrules` 与 `07-Agent-Rules/generated/` 均为生成物：改规则只改 SOP，然后跑 `compile_rules.py`；提交前跑 `check_rules.py`。
