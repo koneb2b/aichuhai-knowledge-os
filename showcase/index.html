@@ -23,6 +23,16 @@
       <div class="cards" id="scenarios"></div>
     </section>
 
+    <section class="section" aria-labelledby="check-title">
+      <div class="section-head">
+        <h2 id="check-title">你的项目需要哪些护栏？</h2>
+        <p>勾选你正在用的技术栈，立刻看到这套知识库会替你盯住哪些规则。内容来自 27 条真实编译规则。</p>
+      </div>
+      <div class="stack-picker" id="stack-picker"></div>
+      <p class="check-summary" id="check-summary"></p>
+      <div class="rule-list" id="rule-list"></div>
+    </section>
+
     <section class="section" aria-labelledby="deliver-title">
       <div class="section-head">
         <h2 id="deliver-title">给它一个关键词，拿到能直接用的东西</h2>
@@ -106,6 +116,56 @@ python Knowledge-OS/tools/verify_rules.py --product &lt;你的产品目录&gt;</
         cell.appendChild(value);
         ledger.appendChild(cell);
       });
+
+      var picker = document.getElementById('stack-picker');
+      var checkSummary = document.getElementById('check-summary');
+      var ruleList = document.getElementById('rule-list');
+      var selectedStacks = new Set([0, 1]);
+
+      function renderCheck() {
+        var ids = [];
+        Array.prototype.forEach.call(picker.children, function (label, index) {
+          var input = label.querySelector('input');
+          if (!input) return;
+          input.checked = selectedStacks.has(index);
+          if (!input.checked) return;
+          data.stacks[index].ids.forEach(function (id) {
+            if (ids.indexOf(id) === -1) ids.push(id);
+          });
+        });
+        var byId = {};
+        data.catalog.forEach(function (rule) { byId[rule.id] = rule; });
+        var chosen = ids.map(function (id) { return byId[id]; }).filter(Boolean);
+        var checkable = chosen.filter(function (rule) { return rule.checkable; }).length;
+        var locked = chosen.filter(function (rule) { return rule.enforcement === 'BLOCK'; }).length;
+        checkSummary.textContent = chosen.length + ' 条规则 · ' + checkable +
+          ' 条可自动检查 · ' + locked + ' 条硬约束';
+        ruleList.textContent = '';
+        chosen.forEach(function (rule) {
+          var row = el('div', 'rule-row');
+          row.appendChild(el('span', 'rule-id mono', rule.id));
+          row.appendChild(el('span', 'rule-summary', rule.summary));
+          row.appendChild(el('span', 'rule-tag ' + (rule.checkable ? 'auto' : 'manual'),
+            rule.checkable ? '可自动检查' : rule.enforcement));
+          ruleList.appendChild(row);
+        });
+      }
+
+      data.stacks.forEach(function (stack, index) {
+        var label = el('label', 'stack-chip');
+        var input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = selectedStacks.has(index);
+        input.addEventListener('change', function () {
+          if (input.checked) selectedStacks.add(index);
+          else selectedStacks.delete(index);
+          renderCheck();
+        });
+        label.appendChild(input);
+        label.appendChild(el('span', '', stack.label));
+        picker.appendChild(label);
+      });
+      renderCheck();
 
       var scenarios = document.getElementById('scenarios');
       data.scenarios.forEach(function (item) {

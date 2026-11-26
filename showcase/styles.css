@@ -94,4 +94,27 @@ pre { margin: 10px 0 0; padding: 12px; overflow-x: auto; color: var(--dim); font
 .cta p { margin: 8px 0 14px; color: var(--dim); font-size: 11px; }
 .cta details summary { cursor: pointer; color: var(--accent); font-size: 11px; }
 
+.stack-picker { display: flex; flex-wrap: wrap; gap: 8px; }
+.stack-chip {
+  display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface); color: var(--dim);
+  padding: 8px 11px; font-size: 11px;
+}
+.stack-chip input { accent-color: var(--accent); margin: 0; }
+.stack-chip:has(input:checked) { border-color: var(--accent); color: var(--ink); }
+.check-summary { margin: 14px 0 10px; color: var(--accent); font-family: var(--mono); font-size: 12px; }
+.rule-list { border-top: 1px solid var(--line); }
+.rule-row {
+  display: grid; grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
+  gap: 10px; align-items: baseline; padding: 9px 4px; border-bottom: 1px solid var(--line);
+}
+.rule-id { color: var(--ink); font-size: 10px; white-space: nowrap; }
+.rule-summary { color: var(--dim); font-size: 11px; line-height: 1.6; }
+.rule-tag { font-family: var(--mono); font-size: 9px; white-space: nowrap; }
+.rule-tag.auto { color: var(--pass); }
+.rule-tag.manual { color: var(--faint); }
+@media (max-width: 560px) {
+  .rule-row { grid-template-columns: minmax(0, 1fr); gap: 3px; }
+}
+
 footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--faint); font-size: 10px; }
