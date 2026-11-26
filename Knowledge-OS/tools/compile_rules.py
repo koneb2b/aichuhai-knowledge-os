@@ -6,7 +6,8 @@ compile_rules.py — 把 SOP frontmatter 的 agent_rules 编译成 Agent 可消�
 产物（全部为生成物，禁止手改）:
   1. Knowledge-OS/07-Agent-Rules/generated/{domain}-rules.md   opencode.json 载入
   2. Knowledge-OS/07-Agent-Rules/generated/.manifest.json       计数与文件清单
-  3. .cursorrules                                               Cursor 入口，含全部规则 ID
+  3. Knowledge-OS/07-Agent-Rules/generated/rules.json           机器可读规则索引（本地看板消费）
+  4. .cursorrules                                               Cursor 入口，含全部规则 ID
 
 校验策略: fail-closed。必填字段缺失 / 类型错误 / 枚举越界 / 域不在白名单 /
 ID 格式非法 / 规则 ID 重复 → 退出码 1，且不写入任何文件。
@@ -30,6 +31,7 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 KB_DIR = BASE_DIR / "Knowledge-OS"
 GENERATED_DIR = KB_DIR / "07-Agent-Rules" / "generated"
 MANIFEST_PATH = GENERATED_DIR / ".manifest.json"
+RULES_JSON_PATH = GENERATED_DIR / "rules.json"
 CURSORRULES_PATH = BASE_DIR / ".cursorrules"
 
 HEADER_COMMENT = """# =================================================================
@@ -55,6 +57,8 @@ DOMAIN_TITLES = {
 }
 
 ENFORCEMENTS = ("block", "must", "should", "may")
+# 生成物目录不参与 SOP 扫描：其 last_updated 不代表规则版本。
+EXCLUDED_DIRS = {"07-Agent-Rules", "tools", ".obsidian"}
 RULE_FIELDS = ("id", "rule", "priority", "enforcement", "overridable")
 OPTIONAL_FIELDS = ("check",)
 CHECK_TYPES = ("grep", "ast", "file", "config", "manual")
@@ -72,7 +76,7 @@ def collect_rules():
     stamps = []
 
     for path in sorted(KB_DIR.rglob("*.md")):
-        if "07-Agent-Rules" in path.parts or path.name == "Dashboard.md":
+        if any(part in EXCLUDED_DIRS for part in path.parts) or path.name == "Dashboard.md":
             continue
 
         text = path.read_text(encoding="utf-8")
@@ -174,6 +178,16 @@ def collect_rules():
                             errors.append(
                                 f"{where} check.type={check['type']} 时 check.{key} 必填"
                             )
+                if "mode" in check and check["mode"] not in ("present", "absent"):
+                    errors.append(f"{where} check.mode 必须是 present/absent 之一")
+                if "pattern" in check and not isinstance(check["pattern"], str):
+                    errors.append(f"{where} check.pattern 必须是字符串")
+                exclude = check.get("exclude")
+                if exclude is not None and (
+                    not isinstance(exclude, list)
+                    or not all(isinstance(item_glob, str) for item_glob in exclude)
+                ):
+                    errors.append(f"{where} check.exclude 必须是字符串列表")
 
             if rid in seen:
                 errors.append(f"{where} 重复规则 ID（已定义于 {seen[rid]}）")
@@ -182,16 +196,28 @@ def collect_rules():
 
             rules_by_domain.setdefault(domain, []).append({
                 "id": rid,
+                "domain": domain,
                 "doc_id": doc_id.strip(),
+                "doc_title": str(data.get("title", "")).strip(),
                 "version": str(version),
                 "priority": priority,
                 "enforcement": enforcement,
                 "overridable": overridable,
                 "rule": rule_text.strip(),
+                "check": normalize_check(check),
+                "source": path.relative_to(BASE_DIR).as_posix(),
             })
 
     stamp = max(stamps) if stamps else "unknown"
     return rules_by_domain, errors, warnings, stamp
+
+
+def normalize_check(check):
+    """只保留已知字段，保证 rules.json 稳定且不会夹带 YAML 私有对象。"""
+    if not isinstance(check, dict):
+        return None
+    allowed = ("type", "target", "assertion", "mode", "pattern", "exclude")
+    return {key: check[key] for key in allowed if key in check}
 
 
 def sorted_rules(rules):
@@ -215,10 +241,34 @@ def render_domain_file(domain, rules):
     )
 
 
+def render_rules_json(rules_by_domain, stamp):
+    """机器可读索引：本地看板与未来 CI 均消费此文件，不解析 Markdown。"""
+    domains = []
+    flat_rules = []
+    for domain, rules in rules_by_domain.items():
+        domains.append({
+            "key": domain,
+            "title": DOMAIN_TITLES[domain],
+            "count": len(rules),
+        })
+        flat_rules.extend(sorted_rules(rules))
+
+    payload = {
+        "schema_version": 1,
+        "rules_version": stamp,
+        "total_rules": len(flat_rules),
+        "domains": domains,
+        "rules": flat_rules,
+    }
+    return json.dumps(payload, indent=2, ensure_ascii=False)
+
+
 def render_manifest(rules_by_domain):
+    artifact_files = [f"{domain}-rules.md" for domain in rules_by_domain] + ["rules.json"]
     return json.dumps(
         {
             "generated_files": [f"{domain}-rules.md" for domain in rules_by_domain],
+            "artifact_files": artifact_files,
             "total_rules": sum(len(rules) for rules in rules_by_domain.values()),
         },
         indent=2,
@@ -248,6 +298,7 @@ def expected_artifacts(rules_by_domain, stamp):
     artifacts = {}
     for domain, rules in rules_by_domain.items():
         artifacts[GENERATED_DIR / f"{domain}-rules.md"] = render_domain_file(domain, rules).encode("utf-8")
+    artifacts[RULES_JSON_PATH] = render_rules_json(rules_by_domain, stamp).encode("utf-8")
     artifacts[MANIFEST_PATH] = render_manifest(rules_by_domain).encode("utf-8")
     artifacts[CURSORRULES_PATH] = render_cursorrules(rules_by_domain, total, stamp).encode("utf-8")
     return artifacts

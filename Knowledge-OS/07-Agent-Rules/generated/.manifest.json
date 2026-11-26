@@ -6,5 +6,13 @@
     "cro-marketing-rules.md",
     "operations-rules.md"
   ],
+  "artifact_files": [
+    "requirements-rules.md",
+    "engineering-assets-rules.md",
+    "seo-geo-rules.md",
+    "cro-marketing-rules.md",
+    "operations-rules.md",
+    "rules.json"
+  ],
   "total_rules": 27
 }
