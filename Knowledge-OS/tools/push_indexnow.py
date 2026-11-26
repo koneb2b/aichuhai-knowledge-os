@@ -71,8 +71,11 @@ def main() -> int:
         with open(args.url_file, "r", encoding="utf-8") as f:
             urls = [ln.strip() for ln in f if ln.strip()]
         if len(urls) > 10000:
-            print(f"[WARN] Truncated to 10000 URLs (batch limit)")
-            urls = urls[:10000]
+            print(
+                f"[ERROR] {len(urls)} URLs exceed the 10000/batch limit; "
+                "split the file and push in batches."
+            )
+            return 1
 
     if not urls:
         print("[ERROR] Empty URL list")
