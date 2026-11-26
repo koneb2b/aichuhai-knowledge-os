@@ -6,12 +6,15 @@ verify_all.py — 提交前 / CI 的统一校验入口
 快速失败顺序:
   1. check_rules.py          规则契约与生成物漂移
   2. test_compile_rules.py   生成物静态验证
-  3. gen_index.py --check    索引与文档事实一致
-  4. --with-pipeline 追加: run_pipeline.py -> check_outputs.py -> test_check_outputs.py
+  3. test_verify_rules.py    规则断言扫描器回归测试
+  4. gen_index.py --check    索引与文档事实一致
+  5. --with-pipeline 追加: run_pipeline.py -> check_outputs.py -> test_check_outputs.py
+  6. --product <path> 追加: verify_rules.py 扫描产品代码仓
 
 用法:
   python Knowledge-OS/tools/verify_all.py
   python Knowledge-OS/tools/verify_all.py --with-pipeline
+  python Knowledge-OS/tools/verify_all.py --product ../my-app
 """
 
 import argparse
@@ -34,11 +37,16 @@ def main() -> int:
         action="store_true",
         help="追加流水线、产物一致性与产物回归测试",
     )
+    parser.add_argument(
+        "--product",
+        help="可选产品代码仓目录：追加规则断言扫描",
+    )
     args = parser.parse_args()
 
     stages = [
         ("规则契约 (check_rules)", [str(TOOLS / "check_rules.py")]),
         ("生成物静态验证 (test_compile_rules)", [str(TOOLS / "test_compile_rules.py")]),
+        ("规则断言回归测试 (test_verify_rules)", [str(TOOLS / "test_verify_rules.py")]),
         ("索引一致性 (gen_index --check)", [str(TOOLS / "gen_index.py"), "--check"]),
     ]
     if args.with_pipeline:
@@ -56,6 +64,13 @@ def main() -> int:
             ("产物一致性 (check_outputs)", [str(TOOLS / "check_outputs.py")]),
             ("产物回归测试 (test_check_outputs)", [str(TOOLS / "test_check_outputs.py")]),
         ]
+    if args.product:
+        stages.append(
+            (
+                "产品仓规则断言 (verify_rules)",
+                [str(TOOLS / "verify_rules.py"), "--root", args.product],
+            )
+        )
 
     print("=" * 60)
     print("  Knowledge-OS 统一校验")
