@@ -94,6 +94,20 @@ pre { margin: 10px 0 0; padding: 12px; overflow-x: auto; color: var(--dim); font
 .cta p { margin: 8px 0 14px; color: var(--dim); font-size: 11px; }
 .cta details summary { cursor: pointer; color: var(--accent); font-size: 11px; }
 
+.conversion-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+@media (min-width: 820px) { .conversion-grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); } }
+.conversion-grid figure { margin: 0; min-width: 0; border: 1px solid var(--line); background: var(--surface); }
+.conversion-grid figure img { display: block; width: 100%; height: auto; }
+.conversion-grid figcaption { margin: 0; padding: 9px 12px; border-top: 1px solid var(--line); color: var(--faint); font-size: 10px; }
+.output { min-width: 0; border: 1px solid var(--line); border-top: 2px solid var(--pass); background: var(--surface); padding: 16px; }
+.output h3 { margin: 10px 0; font-size: 15px; font-weight: 500; }
+.conv-intro, .conv-conclusion { margin: 0 0 12px; color: var(--dim); font-size: 11px; line-height: 1.7; }
+.conv-conclusion { margin: 12px 0 0; color: var(--pass); }
+#conv-table { width: 100%; min-width: 0; border-collapse: collapse; text-align: left; }
+#conv-table th, #conv-table td { padding: 8px 9px; border: 1px solid var(--line); font-size: 11px; }
+#conv-table th { color: var(--accent); font-weight: 400; background: var(--base); }
+#conv-table td { color: var(--ink); }
+
 .stack-picker { display: flex; flex-wrap: wrap; gap: 8px; }
 .stack-chip {
   display: inline-flex; align-items: center; gap: 7px; cursor: pointer;

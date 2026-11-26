@@ -147,6 +147,32 @@ def checklist_highlights(text: str) -> list:
     return result[:6]
 
 
+def conversion_data() -> dict:
+    assets = BASE / "showcase" / "assets"
+    md_path = assets / "sample.md"
+    raw_path = assets / "raw_extract.txt"
+    if not md_path.is_file() or not raw_path.is_file():
+        return {}
+    md = md_path.read_text(encoding="utf-8")
+    raw = raw_path.read_text(encoding="utf-8")
+    rows = []
+    for line in md.splitlines():
+        if line.startswith("|") and not line.startswith("|---"):
+            rows.append([cell.strip() for cell in line.strip("|").split("|")])
+    paragraphs = [line for line in md.splitlines() if line and not line.startswith(("|", "#"))]
+    return {
+        "image": "assets/sample.png",
+        "raw": raw,
+        "raw_lines": len(raw.splitlines()),
+        "markdown": md,
+        "table_rows": rows,
+        "title": md.splitlines()[0].lstrip("# ").strip(),
+        "intro": paragraphs[0] if paragraphs else "",
+        "conclusion": paragraphs[-1] if paragraphs else "",
+        "pdf_bytes": (assets / "sample.pdf").stat().st_size,
+    }
+
+
 def market_rows() -> list:
     text = EVAL_DOC.read_text(encoding="utf-8")
     section = text.split("## 6. G3 搜索结果实测", 1)[1].split("\n## ", 1)[0]
@@ -249,6 +275,7 @@ def main():
         ],
         "gates": {"pass": gate.PASS, "fail": gate.FAIL},
         "scenarios": scenarios,
+        "conversion": conversion_data(),
         "artifacts": artifacts,
         "market": market_rows(),
         "pipeline": {

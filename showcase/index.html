@@ -33,6 +33,30 @@
       <div class="rule-list" id="rule-list"></div>
     </section>
 
+    <section class="section" id="conversion" aria-labelledby="conversion-title">
+      <div class="section-head">
+        <h2 id="conversion-title">实拍：一份带表格的 PDF，到底转成了什么</h2>
+        <p id="conversion-note"></p>
+      </div>
+      <div class="conversion-grid">
+        <figure>
+          <img src="assets/sample.png" alt="样品 PDF 页面截图">
+          <figcaption>输入：真实 PDF 页面（模块生成并渲染）</figcaption>
+        </figure>
+        <div class="output">
+          <p class="card-kicker">输出：可直接粘进 Obsidian / Notion</p>
+          <h3 id="conv-title"></h3>
+          <p class="conv-intro" id="conv-intro"></p>
+          <table id="conv-table"></table>
+          <p class="conv-conclusion" id="conv-conclusion"></p>
+        </div>
+      </div>
+      <details class="technical">
+        <summary>对比原始抽取与生成的 Markdown</summary>
+        <pre id="conv-raw"></pre>
+      </details>
+    </section>
+
     <section class="section" aria-labelledby="deliver-title">
       <div class="section-head">
         <h2 id="deliver-title">给它一个关键词，拿到能直接用的东西</h2>
@@ -116,6 +140,28 @@ python Knowledge-OS/tools/verify_rules.py --product &lt;你的产品目录&gt;</
         cell.appendChild(value);
         ledger.appendChild(cell);
       });
+
+      var conv = data.conversion;
+      if (!conv || !conv.table_rows || !conv.table_rows.length) {
+        document.getElementById('conversion').style.display = 'none';
+      } else {
+        document.getElementById('conversion-note').textContent =
+          '原始文本抽取得到 ' + conv.raw_lines + ' 行散乱文字；版面还原后识别出 1 张表，表格结构完整保留。';
+        document.getElementById('conv-title').textContent = conv.title;
+        document.getElementById('conv-intro').textContent = conv.intro;
+        document.getElementById('conv-conclusion').textContent = conv.conclusion;
+        var convTable = document.getElementById('conv-table');
+        conv.table_rows.forEach(function (row, index) {
+          var tr = el('tr');
+          row.forEach(function (cell) {
+            tr.appendChild(el(index === 0 ? 'th' : 'td', '', cell));
+          });
+          convTable.appendChild(tr);
+        });
+        document.getElementById('conv-raw').textContent =
+          '直接抽取（' + conv.raw_lines + ' 行）：\n' + conv.raw +
+          '\n\n还原后的 Markdown：\n' + conv.markdown;
+      }
 
       var picker = document.getElementById('stack-picker');
       var checkSummary = document.getElementById('check-summary');
