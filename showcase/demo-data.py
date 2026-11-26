@@ -17,11 +17,11 @@ BASE = Path(__file__).resolve().parents[1]
 TOOLS = BASE / "Knowledge-OS" / "tools"
 sys.path.insert(0, str(TOOLS))
 
+import check_rules as gate  # noqa: E402
 import test_verify_rules as fixtures  # noqa: E402
 import verify_rules as vr  # noqa: E402
 
 RULES_PATH = BASE / "Knowledge-OS" / "07-Agent-Rules" / "generated" / "rules.json"
-HEALTH_PATH = BASE / "viewer" / "public" / "data" / "health.json"
 OUTPUT_DIR = TOOLS / "output"
 OUT_PATH = BASE / "showcase" / "data.js"
 
@@ -40,7 +40,8 @@ def build_fixtures():
 def main():
     good_root, bad_root, rules = build_fixtures()
     payload = json.loads(RULES_PATH.read_text(encoding="utf-8"))
-    health = json.loads(HEALTH_PATH.read_text(encoding="utf-8"))
+    gate.run(json_mode=True)
+    health = {"pass": gate.PASS, "fail": gate.FAIL, "summary": gate.SUMMARY}
 
     checks = []
     for rule in rules:

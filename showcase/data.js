@@ -1,7 +1,7 @@
 window.SHOWCASE_DATA = {
   "headline": "让 AI 写代码不出轨",
   "subhead": "27 条规则编译成 9 条可执行断言：代码一错就红灯。点一下，看合规与违规的差别。",
-  "generated_at": "2026-11-26T15:14:46+08:00",
+  "generated_at": "2026-11-26T15:26:40+08:00",
   "rules_version": "2026-11-26",
   "ledger": [
     {
