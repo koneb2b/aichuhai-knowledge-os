@@ -60,9 +60,11 @@ pdf to markdown for notion,90,5,8,2,5,0.9,
 | `compile_rules.py` | 规则编译 | Document-as-Code |
 | `gen_index.py` | 校验文档中的规则数/文档数/文件名是否与事实一致（`--check`） | — |
 | `check_rules.py` | 规则契约闸门：schema / ID 唯一 / 消费端覆盖 / 漂移 / 清单（任一失败退出码 1） | 全部规则 |
-| `verify_all.py` | 统一校验入口：契约 → 静态验证 → 索引（`--with-pipeline` 追加流水线与产物链） | 全部 |
+| `verify_all.py` | 统一校验入口：契约 → 静态验证 → 断言测试 → 索引（`--with-pipeline` 追加流水线与产物，`--product` 扫描产品仓） | 全部 |
 | `test_compile_rules.py` | 静态验证套件（manifest / 完整性 / 格式 / 去重 / rules.json / 域覆盖） | — |
 | `test_check_outputs.py` | 产物一致性回归测试（临时目录夹具，覆盖 F-1/F-3/F-4/F-5 回退场景） | — |
+| `verify_rules.py` | 按 rules.json 的 check 定义扫描产品代码仓（9 条 BLOCK 断言，grep 型） | 9 条 BLOCK |
+| `test_verify_rules.py` | 断言扫描器回归测试（合规夹具 + 逐条注入违规） | — |
 
 > ⚠️ **数据来源说明**：`sv`/`kd`/`allintitle` 需从 Ahrefs/Semrush 导出后填入 CSV（工具无网络爬取能力）；评分维度可手工优化后重跑，成本为零。
 
@@ -88,7 +90,7 @@ npm run build && npm run start              # 生产预览
 | contract | `python -m pip install -r Knowledge-OS/tools/requirements.txt` → `python Knowledge-OS/tools/verify_all.py --with-pipeline` |
 | viewer | `npm ci` → `npm run typecheck` → `npm run build`（工作目录 `viewer/`） |
 
-本地等价复现：`python Knowledge-OS/tools/verify_all.py --with-pipeline`，看板部分见上一节。
+本地等价复现：`python Knowledge-OS/tools/verify_all.py --with-pipeline`（7 阶段，含断言扫描器回归测试）。产品仓代码出现后可用 `--product <目录>` 追加 9 条 BLOCK 断言的真实扫描。
 
 ## 目录结构
 
@@ -147,6 +149,7 @@ npm run build && npm run start              # 生产预览
 - 规则型 SOP 的 frontmatter 必须含：`title` / `id` / `version` / `category` / `last_updated` / `domain` / `agent_rules`。
 - 评估、模板等参考文档的 frontmatter 至少含：`title` / `id` / `version` / `category` / `last_updated` / `domain`（无 `agent_rules`，不参与编译）。
 - `agent_rules` 每项含：`id`（域内唯一）/ `priority` / `enforcement` / `overridable` / `rule`（英文，供 Agent 直接使用）。
+- BLOCK 规则的机器断言写在 `agent_rules.check`（`type/target/assertion/mode/pattern/exclude`）；改断言后重跑 `compile_rules.py` 与 `viewer_data.py`。
 - 修改文档后同步更新 `last_updated`；废弃文档转 `status: deprecated` + `merged_into` 指引。
 - 已合并文件（frontmatter 标注 `deprecated`）可以在 shell 环境恢复后物理删除，见 `99-Archive/项目知识库深度分析报告.md` 附录。
 - `.cursorrules` 与 `07-Agent-Rules/generated/` 均为生成物：改规则只改 SOP，然后跑 `compile_rules.py`；提交前跑 `verify_all.py`。
