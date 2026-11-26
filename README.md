@@ -21,6 +21,8 @@ python Knowledge-OS/tools/check_rules.py
 python Knowledge-OS/tools/verify_all.py
 ```
 
+> Python 依赖（PyYAML）首次安装：`python -m pip install -r Knowledge-OS/tools/requirements.txt`。
+
 > 生成物为 `Knowledge-OS/07-Agent-Rules/generated/`（5 个域规则文件 + manifest + `rules.json`）与根目录 `.cursorrules`，均由 `compile_rules.py` 生成，勿手改（HEADER 已注明）。手改会被 `check_rules.py` 判为漂移。
 
 ## 自动化工具链（从蓝海需求到 MVP 落地）
@@ -76,6 +78,17 @@ npm run build && npm run start              # 生产预览
 ```
 
 规则或闸门结果变化后，先重跑 `viewer_data.py` 再刷新页面；若快照版本落后于规则版本，页面顶部会提示重跑。
+
+## CI（GitHub Actions）
+
+`.github/workflows/verify.yml` 在 push 到 `main`、PR 与手动触发时并行跑两个作业：
+
+| 作业 | 步骤 |
+|------|------|
+| contract | `python -m pip install -r Knowledge-OS/tools/requirements.txt` → `python Knowledge-OS/tools/verify_all.py --with-pipeline` |
+| viewer | `npm ci` → `npm run typecheck` → `npm run build`（工作目录 `viewer/`） |
+
+本地等价复现：`python Knowledge-OS/tools/verify_all.py --with-pipeline`，看板部分见上一节。
 
 ## 目录结构
 
