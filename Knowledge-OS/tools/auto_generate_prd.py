@@ -18,16 +18,19 @@ auto_generate_prd.py — Knowledge-OS PRD 自动生成器
 import json
 import sys
 import argparse
+from datetime import date
 from pathlib import Path
 
 HEADER_TMPL = """---
 title: "{title}"
-id: "PRD-{idx:02d}"
+id: "PRD-{date}-{idx:02d}"
+category: "01-Requirements"
 domain: "requirements"
+version: "v0.1.0"
 status: "draft"
 source_keyword: "{keyword}"
 opportunity_score: {score}
-last_updated: "2026-08-13"
+last_updated: "{date}"
 ---
 
 # PRD: {title}
@@ -94,8 +97,9 @@ last_updated: "2026-08-13"
 ## 8. 风险与合规
 
 - 账单硬顶: 日 $10 预警 / $50 熔断 (OPS-001-A)
-- 隐私: Cookie Banner + /account/delete + Stripe Tax (PRIV-001-A/B/C)
-- 跨境税务: LemonSqueezy MoR 代缴 (CASE-001-B)
+- 隐私: Cookie Banner + /account/delete (PRIV-001-A/B)
+- 跨境税务: LemonSqueezy/Paddle (MoR) 代收代缴, 商户不自行申报 (CASE-001-B)
+- 自营税务 (仅当不用 MoR 时): 评估 Stripe Tax 并由商户自行申报 (PRIV-001-C)
 """
 
 
@@ -124,12 +128,14 @@ def main() -> int:
 
     targets = passed if args.all else passed[:1]
     out_dir.mkdir(parents=True, exist_ok=True)
+    run_date = date.today().isoformat()
 
     for idx, c in enumerate(targets, start=1):
         kw = c["keyword"]
         title = kw.title().replace(" ", "") + " SaaS"
         content = HEADER_TMPL.format(
             title=title,
+            date=run_date,
             idx=idx,
             keyword=kw,
             score=c["opportunity_score"],
