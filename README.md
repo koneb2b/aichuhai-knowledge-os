@@ -105,6 +105,18 @@ cd showcase && python -m http.server 3220      # 打开 http://localhost:3220
 
 `.github/workflows/pages.yml` 在每次 push 到 `main` 时自动生成数据并发布到 GitHub Pages：`https://koneb2b.github.io/aichuhai-knowledge-os/`。仓库已启用 Pages（`build_type: workflow`）；若换仓库部署，需在 Settings → Pages 把 Source 设为 GitHub Actions。
 
+## 产品演示模块（pdf-to-markdown-ai/）
+
+`pdf-to-markdown-ai/scripts/demo_converter.py` 是最小可运行演示：生成带中文表格的样品 PDF，用版面识别重建 Markdown，并输出页面截图与原始抽取文本。产物接入客户展示页的「实拍」区块。
+
+```bash
+pip install pymupdf
+python pdf-to-markdown-ai/scripts/demo_converter.py
+python showcase/demo-data.py
+```
+
+这是演示模块，不是完整 MVP；商业闸门状态见 `pdf-to-markdown-ai/STATUS.md`。
+
 ## 目录结构
 
 ```
