@@ -9,12 +9,12 @@
 
 | 编号 | 域 | 说明 | 有效文档数 |
 |------|----|------|--------|
-| 01 | Requirements | 选品与需求分析 | 4 |
+| 01 | Requirements | 选品与需求分析 | 5 |
 | 02 | Architecture | 技术架构 | 2 |
 | 03 | Engineering-Assets | 工程安全与限流 | 2 |
 | 04 | SEO-GEO | 搜索引擎与生成式引擎优化 | 2 |
 | 05 | CRO-Marketing | 转化率优化与冷启动 | 1 |
-| 06 | Operations | 运行监控与成本熔断 | 2 |
+| 06 | Operations | 运行监控与成本熔断 | 3 |
 | 07 | Agent-Rules | 自动编译规则（27条） | 5 |
 | 08 | Case-Studies | 案例复盘 | 1 |
 

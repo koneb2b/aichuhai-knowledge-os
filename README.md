@@ -96,11 +96,12 @@ npm run build && npm run start              # 生产预览
 
 ```
 📦 Knowledge-OS/                        # Obsidian Vault 根
-├── 01-Requirements/                    选品与需求分析（4 文档）
+├── 01-Requirements/                    选品与需求分析（5 文档）
 │   ├── 01-KGR长尾词挖掘与微SaaS逆向选品SOP.md
 │   ├── 02-Opportunity-Score选品与商业意图分析SOP.md
 │   ├── 03-选品评估-pdf-to-markdown-ai.md
-│   └── 04-PRD模板.md
+│   ├── 04-PRD模板.md
+│   └── 05-G1用户访谈与G2预付验证执行包.md
 ├── 02-Architecture/                    技术架构（2 文档）
 │   ├── 02-Supabase事务池与Prepared-Statements兼容SOP.md
 │   └── 03-全栈AI产品高并发与低成本架构SOP.md  ← 母版（合并自 01+03）
@@ -111,7 +112,9 @@ npm run build && npm run start              # 生产预览
 │   ├── 02-pSEO灰度风控与Google-Scaled-Content-Abuse规约SOP.md
 │   └── 03-生成式引擎优化(GEO)与IndexNow极速收录SOP.md ← 母版（合并自 01+03）
 ├── 05-CRO-Marketing/                   CRO 与冷启动（1 文档）
-├── 06-Operations/                      运行监控与合规（2 文档）
+├── 06-Operations/                      运行监控与合规（3 文档）
+│   ├── 01-GSC爬虫监控与API账单硬顶警报SOP.md
+│   └── 02-G4单位经济模型与击穿测算.md
 ├── 07-Agent-Rules/generated/           编译规则产物（5 域，27 条）
 ├── 08-Case-Studies/                    案例复盘（1 文档）
 ├── AGENTS.md                           本地工程约定（Agent 强制）
