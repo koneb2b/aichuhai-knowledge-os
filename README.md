@@ -11,22 +11,28 @@
 # 1. 编译规则（扫描全部 SOP 的 agent_rules → 生成 07-Agent-Rules/generated/*.md + manifest）
 python Knowledge-OS/tools/compile_rules.py
 
-# 2. 静态验证（27 项检查：manifest、文件完整性、规则格式、去重、域覆盖）
+# 2. 静态验证（manifest、生成文件完整性、规则格式、去重、rules.json、域覆盖）
 python Knowledge-OS/tools/test_compile_rules.py
 
 # 3. 规则契约闸门（重新解析 SOP 并重算期望产物；手改生成物 / 改完忘编译 → 退出码 1）
 python Knowledge-OS/tools/check_rules.py
+
+# 4. 一键校验（提交前 / CI 入口；--with-pipeline 追加产物链）
+python Knowledge-OS/tools/verify_all.py
 ```
 
-> 生成物为 `Knowledge-OS/07-Agent-Rules/generated/`（5 个域规则文件 + manifest）与根目录 `.cursorrules`，均由 `compile_rules.py` 生成，勿手改（HEADER 已注明）。手改会被 `check_rules.py` 判为漂移。
+> 生成物为 `Knowledge-OS/07-Agent-Rules/generated/`（5 个域规则文件 + manifest + `rules.json`）与根目录 `.cursorrules`，均由 `compile_rules.py` 生成，勿手改（HEADER 已注明）。手改会被 `check_rules.py` 判为漂移。
 
 ## 自动化工具链（从蓝海需求到 MVP 落地）
 
-知识库内置 **一条命令** 的自动化流水线，覆盖「选品 → 评分 → PRD → 部署清单」：
+知识库内置 **一条命令** 的自动化流水线，覆盖「选品 → 评分 → PRD → 部署清单 → 产物自检」：
 
 ```bash
-# 全流程：选品 + PRD(全部通过词) + 部署/运营检查单
+# 全流程：选品 + PRD(全部通过词) + 部署/运营检查单 + 产物自检
 python Knowledge-OS/tools/run_pipeline.py keywords.csv --all --workdir output/
+
+# 产物自检（流水线末尾已自动执行，也可单独跑）
+python Knowledge-OS/tools/check_outputs.py --dir output/
 
 # 分步执行
 python Knowledge-OS/tools/auto_select.py keywords.csv --output-dir output/   # 1. 选品
@@ -44,16 +50,32 @@ pdf to markdown for notion,90,5,8,2,5,0.9,
 
 | 工具 | 功能 | 规则依据 |
 |------|------|---------|
-| `run_pipeline.py` | 一键选品→PRD→部署清单 | 全链路 |
+| `run_pipeline.py` | 一键选品→PRD→部署/运营检查单→产物自检 | 全链路 |
+| `check_outputs.py` | 校验生成物一致性：PRD 日期/ID/frontmatter、税务表述、部署依赖；回退即退出码 1 | F-1/F-3/F-4/F-5 |
 | `auto_select.py` | KGR 阶梯过滤 + Opportunity Score ≥ 3.5 | 01-KGR / 02-Opportunity |
 | `auto_generate_prd.py` | 自动生成 PRD（功能/Funnel/定价/技术规格/收录/指标/合规） | 全部规则 |
 | `push_indexnow.py` | IndexNow 批量推送（单条或 URLs 文件，≤10000/批） | GEO-001-B |
 | `compile_rules.py` | 规则编译 | Document-as-Code |
 | `gen_index.py` | 校验文档中的规则数/文档数/文件名是否与事实一致（`--check`） | — |
-| `check_rules.py` | 规则契约闸门：schema / ID 唯一 / 消费端覆盖 / 漂移 / 清单（任一失败退出码 1） | 全部 27 条 |
-| `test_compile_rules.py` | 27 项静态验证 | — |
+| `check_rules.py` | 规则契约闸门：schema / ID 唯一 / 消费端覆盖 / 漂移 / 清单（任一失败退出码 1） | 全部规则 |
+| `verify_all.py` | 统一校验入口：契约 → 静态验证 → 索引（`--with-pipeline` 追加流水线与产物链） | 全部 |
+| `test_compile_rules.py` | 静态验证套件（manifest / 完整性 / 格式 / 去重 / rules.json / 域覆盖） | — |
+| `test_check_outputs.py` | 产物一致性回归测试（临时目录夹具，覆盖 F-1/F-3/F-4/F-5 回退场景） | — |
 
 > ⚠️ **数据来源说明**：`sv`/`kd`/`allintitle` 需从 Ahrefs/Semrush 导出后填入 CSV（工具无网络爬取能力）；评分维度可手工优化后重跑，成本为零。
+
+## 本地看板（viewer/）
+
+只读单屏看板，读取编译快照，不连数据库、不需要账号。
+
+```bash
+python Knowledge-OS/tools/viewer_data.py   # 刷新 viewer/public/data/*.json
+cd viewer && npm install
+npm run dev                                 # http://localhost:3000
+npm run build && npm run start              # 生产预览
+```
+
+规则或闸门结果变化后，先重跑 `viewer_data.py` 再刷新页面；若快照版本落后于规则版本，页面顶部会提示重跑。
 
 ## 目录结构
 
@@ -109,8 +131,10 @@ pdf to markdown for notion,90,5,8,2,5,0.9,
 
 ## 维护约定
 
-- SOP frontmatter 必须含：`title` / `id` / `version` / `category` / `last_updated` / `domain` / `agent_rules`。
+- 规则型 SOP 的 frontmatter 必须含：`title` / `id` / `version` / `category` / `last_updated` / `domain` / `agent_rules`。
+- 评估、模板等参考文档的 frontmatter 至少含：`title` / `id` / `version` / `category` / `last_updated` / `domain`（无 `agent_rules`，不参与编译）。
 - `agent_rules` 每项含：`id`（域内唯一）/ `priority` / `enforcement` / `overridable` / `rule`（英文，供 Agent 直接使用）。
 - 修改文档后同步更新 `last_updated`；废弃文档转 `status: deprecated` + `merged_into` 指引。
 - 已合并文件（frontmatter 标注 `deprecated`）可以在 shell 环境恢复后物理删除，见 `99-Archive/项目知识库深度分析报告.md` 附录。
-- `.cursorrules` 与 `07-Agent-Rules/generated/` 均为生成物：改规则只改 SOP，然后跑 `compile_rules.py`；提交前跑 `check_rules.py`。
+- `.cursorrules` 与 `07-Agent-Rules/generated/` 均为生成物：改规则只改 SOP，然后跑 `compile_rules.py`；提交前跑 `verify_all.py`。
+- 启用本地提交钩子（一次性）：`git config core.hooksPath .githooks`，之后每次 commit 自动跑 `verify_all.py`。
