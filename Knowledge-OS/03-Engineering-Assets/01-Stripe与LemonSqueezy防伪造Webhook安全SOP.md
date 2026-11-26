@@ -5,7 +5,7 @@ version: "1.2.0"
 source_url: "https://aichuhai.dev/sop/stripe-webhook-security"
 category: "03-Engineering-Assets"
 domain: "engineering-assets"
-last_updated: "2026-11-17"
+last_updated: "2026-11-26"
 tags:
   - "Stripe"
   - "LemonSqueezy"
@@ -32,11 +32,23 @@ agent_rules:
     enforcement: "block"
     overridable: false
     rule: "Always use req.text() raw body for webhook signature verification; never use req.json()."
+    check:
+      type: "grep"
+      target: "app/api/**/*webhook*.{ts,js}"
+      assertion: "Webhook 验签必须读取原始正文，不得用 json() 解析后再验签"
+      mode: "absent"
+      pattern: '\.json\(\)'
   - id: "WEBHOOK-001-B"
     priority: 95
     enforcement: "block"
     overridable: false
     rule: "Record event_id with UNIQUE constraint in database to guarantee idempotent webhook processing."
+    check:
+      type: "grep"
+      target: "**/*.sql"
+      assertion: "事件表必须给 event_id 加 UNIQUE 约束保证幂等"
+      mode: "present"
+      pattern: 'event_id[^\n]*UNIQUE'
 ---
 
 # Stripe与LemonSqueezy防伪造Webhook安全SOP

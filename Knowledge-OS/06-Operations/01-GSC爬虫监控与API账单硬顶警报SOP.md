@@ -10,7 +10,7 @@ evidence_level: "Level A"
 enforcement: "block"
 source_authority: "Cloud Platform Financial Management"
 source_url: "https://aichuhai.dev/sop/cost-control"
-last_updated: "2026-08-13"
+last_updated: "2026-11-26"
 quantitative_metrics:
   - "API 日账单硬顶: 每日 API 消费不得超过 $10 预警 / $50 熔断"
   - "GSC 检查频率: 每周 1 次（Indexing Rate / Impressions / Crawl Anomalies）"
@@ -23,6 +23,12 @@ agent_rules:
     enforcement: "block"
     overridable: false
     rule: "Configure API daily spend ceiling alerts to automatically trigger circuit breakers upon threshold breach."
+    check:
+      type: "grep"
+      target: ".env.example"
+      assertion: "必须声明 API 日消费上限与熔断阈值"
+      mode: "present"
+      pattern: "SPEND_CEILING|DAILY_BUDGET|SPEND_LIMIT"
 ---
 
 # GSC爬虫监控与API账单硬顶警报SOP

@@ -10,7 +10,7 @@ evidence_level: "Level A"
 enforcement: "block"
 source_authority: "Supabase Official Docs"
 source_url: "https://supabase.com/docs/guides/database/connecting-to-postgres#connection-pooler"
-last_updated: "2026-08-12"
+last_updated: "2026-11-26"
 fatal_pitfalls:
   - "严禁在 Serverless/API Routes 中直连 5432 端口，冷启动并发会抛出 Error 42P05 导致连接池爆表"
 agent_rules:
@@ -19,11 +19,23 @@ agent_rules:
     enforcement: "block"
     overridable: false
     rule: "In Vercel or Serverless API routes, connect via Supabase Port 6543 (Transaction Pooler)."
+    check:
+      type: "grep"
+      target: "**/*.{ts,js,mjs}"
+      assertion: "数据库连接串必须使用 6543 事务池端口"
+      mode: "present"
+      pattern: ":6543"
   - id: "DB-001-B"
     priority: 95
     enforcement: "block"
     overridable: false
     rule: "Disable server-side prepared statements (e.g., prepare: false or pgbouncer=true) in database drivers when connecting via Transaction Pooler to prevent Error 42P05."
+    check:
+      type: "grep"
+      target: "**/*.{ts,js,mjs}"
+      assertion: "事务池连接必须显式关闭服务端 Prepared Statements"
+      mode: "present"
+      pattern: "prepare: false|pgbouncer=true"
 ---
 
 # Supabase事务池与Prepared-Statements兼容SOP

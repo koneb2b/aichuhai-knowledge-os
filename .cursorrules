@@ -4,7 +4,7 @@
 # 自检: python Knowledge-OS/tools/check_rules.py
 # =================================================================
 # AI 产品出海开发与工程风控规则 (.cursorrules)
-# 生效规则数: 27 (2026-11-17)
+# 生效规则数: 27 (2026-11-26)
 # 本文件由 compile_rules.py 从 SOP 的 agent_rules 生成，手改会在下次编译时被覆盖。
 # 每条规则带唯一 ID，可在代码评审与审计中直接引用；机器可读版见 07-Agent-Rules/generated/。
 

@@ -5,7 +5,7 @@ version: "2.0.0"
 source_url: "https://aichuhai.dev/sop/upstash-rate-limit"
 category: "03-Engineering-Assets"
 domain: "engineering-assets"
-last_updated: "2026-08-13"
+last_updated: "2026-11-26"
 tags:
   - "Upstash"
   - "Redis"
@@ -38,11 +38,23 @@ agent_rules:
     enforcement: "block"
     overridable: false
     rule: "Mount sliding window rate limit on all public API routes to prevent bill shock from abuse."
+    check:
+      type: "grep"
+      target: "**/*.{ts,js}"
+      assertion: "公开 API 必须接入 Upstash 滑动窗口限流"
+      mode: "present"
+      pattern: "@upstash/ratelimit|slidingWindow"
   - id: "RL-001-B"
     priority: 90
     enforcement: "block"
     overridable: false
     rule: "Enforce AbortController 15-second timeout and per-user token consumption ceiling on LLM routes."
+    check:
+      type: "grep"
+      target: "app/api/**/*.{ts,js}"
+      assertion: "LLM 路由必须有超时中断与每用户 token 硬顶"
+      mode: "present"
+      pattern: "AbortController|TOKEN_LIMIT|tokenCeiling"
   - id: "RL-001-C"
     priority: 85
     enforcement: "must"

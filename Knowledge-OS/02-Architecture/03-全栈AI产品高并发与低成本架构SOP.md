@@ -4,7 +4,7 @@ id: "RULE-ARCH-001"
 version: "2.0.0"
 source_url: "https://aichuhai.dev/sop/architecture-stack"
 category: "02-Architecture"
-last_updated: "2026-08-13"
+last_updated: "2026-11-26"
 tags:
   - "Next.js"
   - "Vercel"
@@ -34,6 +34,12 @@ agent_rules:
     enforcement: "block"
     overridable: false
     rule: "Always connect Supabase via port 6543 Transaction Pooler in Serverless API routes; never direct-connect 5432."
+    check:
+      type: "grep"
+      target: "app/api/**/*.{ts,tsx,js}"
+      assertion: "Serverless API 路由不得直连 5432"
+      mode: "absent"
+      pattern: ":5432"
   - id: "ARCH-001-B"
     priority: 90
     enforcement: "must"

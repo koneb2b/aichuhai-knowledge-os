@@ -4,7 +4,7 @@ id: "RULE-CASE-001"
 version: "1.1.0"
 source_url: "https://aichuhai.dev/sop/micro-saas-roadmap"
 category: "08-Case-Studies"
-last_updated: "2026-08-13"
+last_updated: "2026-11-26"
 tags:
   - "案例复盘"
   - "月入千刀"
@@ -38,6 +38,12 @@ agent_rules:
     enforcement: "block"
     overridable: false
     rule: "Use a Merchant of Record (LemonSqueezy/Paddle) for cross-border tax compliance; never use raw Stripe personal account."
+    check:
+      type: "grep"
+      target: "package.json"
+      assertion: "不得安装裸 stripe 包，跨境税由 MoR 代收代缴"
+      mode: "absent"
+      pattern: '"stripe"\s*:'
 ---
 
 # 单人AI-Micro-SaaS月入千刀路线图与踩坑复盘

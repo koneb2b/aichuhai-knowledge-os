@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rules_version": "2026-11-17",
+  "rules_version": "2026-11-26",
   "total_rules": 27,
   "domains": [
     {
@@ -92,7 +92,13 @@
       "enforcement": "block",
       "overridable": false,
       "rule": "Always connect Supabase via port 6543 Transaction Pooler in Serverless API routes; never direct-connect 5432.",
-      "check": null,
+      "check": {
+        "type": "grep",
+        "target": "app/api/**/*.{ts,tsx,js}",
+        "assertion": "Serverless API 路由不得直连 5432",
+        "mode": "absent",
+        "pattern": ":5432"
+      },
       "source": "Knowledge-OS/02-Architecture/03-全栈AI产品高并发与低成本架构SOP.md"
     },
     {
@@ -105,7 +111,13 @@
       "enforcement": "block",
       "overridable": false,
       "rule": "In Vercel or Serverless API routes, connect via Supabase Port 6543 (Transaction Pooler).",
-      "check": null,
+      "check": {
+        "type": "grep",
+        "target": "**/*.{ts,js,mjs}",
+        "assertion": "数据库连接串必须使用 6543 事务池端口",
+        "mode": "present",
+        "pattern": ":6543"
+      },
       "source": "Knowledge-OS/02-Architecture/02-Supabase事务池与Prepared-Statements兼容SOP.md"
     },
     {
@@ -118,7 +130,13 @@
       "enforcement": "block",
       "overridable": false,
       "rule": "Always use req.text() raw body for webhook signature verification; never use req.json().",
-      "check": null,
+      "check": {
+        "type": "grep",
+        "target": "app/api/**/*webhook*.{ts,js}",
+        "assertion": "Webhook 验签必须读取原始正文，不得用 json() 解析后再验签",
+        "mode": "absent",
+        "pattern": "\\.json\\(\\)"
+      },
       "source": "Knowledge-OS/03-Engineering-Assets/01-Stripe与LemonSqueezy防伪造Webhook安全SOP.md"
     },
     {
@@ -131,7 +149,13 @@
       "enforcement": "block",
       "overridable": false,
       "rule": "Disable server-side prepared statements (e.g., prepare: false or pgbouncer=true) in database drivers when connecting via Transaction Pooler to prevent Error 42P05.",
-      "check": null,
+      "check": {
+        "type": "grep",
+        "target": "**/*.{ts,js,mjs}",
+        "assertion": "事务池连接必须显式关闭服务端 Prepared Statements",
+        "mode": "present",
+        "pattern": "prepare: false|pgbouncer=true"
+      },
       "source": "Knowledge-OS/02-Architecture/02-Supabase事务池与Prepared-Statements兼容SOP.md"
     },
     {
@@ -144,7 +168,13 @@
       "enforcement": "block",
       "overridable": false,
       "rule": "Mount sliding window rate limit on all public API routes to prevent bill shock from abuse.",
-      "check": null,
+      "check": {
+        "type": "grep",
+        "target": "**/*.{ts,js}",
+        "assertion": "公开 API 必须接入 Upstash 滑动窗口限流",
+        "mode": "present",
+        "pattern": "@upstash/ratelimit|slidingWindow"
+      },
       "source": "Knowledge-OS/03-Engineering-Assets/02-Upstash-Redis滑动窗口防刷限流SOP.md"
     },
     {
@@ -157,7 +187,13 @@
       "enforcement": "block",
       "overridable": false,
       "rule": "Record event_id with UNIQUE constraint in database to guarantee idempotent webhook processing.",
-      "check": null,
+      "check": {
+        "type": "grep",
+        "target": "**/*.sql",
+        "assertion": "事件表必须给 event_id 加 UNIQUE 约束保证幂等",
+        "mode": "present",
+        "pattern": "event_id[^\\n]*UNIQUE"
+      },
       "source": "Knowledge-OS/03-Engineering-Assets/01-Stripe与LemonSqueezy防伪造Webhook安全SOP.md"
     },
     {
@@ -183,7 +219,13 @@
       "enforcement": "block",
       "overridable": false,
       "rule": "Enforce AbortController 15-second timeout and per-user token consumption ceiling on LLM routes.",
-      "check": null,
+      "check": {
+        "type": "grep",
+        "target": "app/api/**/*.{ts,js}",
+        "assertion": "LLM 路由必须有超时中断与每用户 token 硬顶",
+        "mode": "present",
+        "pattern": "AbortController|TOKEN_LIMIT|tokenCeiling"
+      },
       "source": "Knowledge-OS/03-Engineering-Assets/02-Upstash-Redis滑动窗口防刷限流SOP.md"
     },
     {
@@ -313,7 +355,13 @@
       "enforcement": "block",
       "overridable": false,
       "rule": "Use a Merchant of Record (LemonSqueezy/Paddle) for cross-border tax compliance; never use raw Stripe personal account.",
-      "check": null,
+      "check": {
+        "type": "grep",
+        "target": "package.json",
+        "assertion": "不得安装裸 stripe 包，跨境税由 MoR 代收代缴",
+        "mode": "absent",
+        "pattern": "\"stripe\"\\s*:"
+      },
       "source": "Knowledge-OS/08-Case-Studies/01-单人AI-Micro-SaaS月入千刀路线图与踩坑复盘.md"
     },
     {
@@ -326,7 +374,13 @@
       "enforcement": "block",
       "overridable": false,
       "rule": "Configure API daily spend ceiling alerts to automatically trigger circuit breakers upon threshold breach.",
-      "check": null,
+      "check": {
+        "type": "grep",
+        "target": ".env.example",
+        "assertion": "必须声明 API 日消费上限与熔断阈值",
+        "mode": "present",
+        "pattern": "SPEND_CEILING|DAILY_BUDGET|SPEND_LIMIT"
+      },
       "source": "Knowledge-OS/06-Operations/01-GSC爬虫监控与API账单硬顶警报SOP.md"
     },
     {
