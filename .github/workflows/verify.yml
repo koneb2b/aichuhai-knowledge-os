@@ -1,0 +1,52 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    name: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: Knowledge-OS/tools/requirements.txt
+      - name: Install Python dependencies
+        run: python -m pip install -r Knowledge-OS/tools/requirements.txt
+      - name: Run full verification chain
+        run: python Knowledge-OS/tools/verify_all.py --with-pipeline
+
+  viewer:
+    name: viewer
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: viewer/package-lock.json
+      - name: Install dependencies
+        working-directory: viewer
+        run: npm ci
+      - name: Typecheck
+        working-directory: viewer
+        run: npm run typecheck
+      - name: Build
+        working-directory: viewer
+        run: npm run build
