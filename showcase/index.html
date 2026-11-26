@@ -3,69 +3,102 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Knowledge-OS · 规则体检</title>
+  <title>Knowledge-OS · 客户展示</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="shell">
     <header class="hero">
-      <p class="eyebrow">KNOWLEDGE-OS · LIVE PROOF</p>
+      <p class="eyebrow">KNOWLEDGE-OS · VERIFIED ARTIFACTS</p>
       <h1 id="headline"></h1>
       <p class="subhead" id="subhead"></p>
       <p class="badge" id="badge"></p>
     </header>
 
-    <section class="section" aria-labelledby="demo-title">
+    <section class="section" aria-labelledby="journey-title">
       <div class="section-head">
-        <h2 id="demo-title">规则体检</h2>
-        <p>同一份代码，点一下切换合规与违规样品。结果来自真实扫描，不是写死的演示数字。</p>
+        <h2 id="journey-title">一条规则的三段旅程</h2>
+        <p>从人写的 SOP，到 AI Agent 读到的文件，再到机器可执行的断言。点规则切换，内容全部来自本仓库真实文件。</p>
       </div>
-
-      <div class="toggle" role="group" aria-label="样品切换">
-        <button type="button" id="btn-good" class="active" aria-pressed="true">合规样品</button>
-        <button type="button" id="btn-bad" aria-pressed="false">违规样品</button>
-      </div>
-
-      <div class="demo-grid">
+      <div class="tabs" id="rule-tabs" role="group" aria-label="选择规则"></div>
+      <div class="journey">
         <div class="panel min-w-0">
-          <p class="label">app/api/route.ts</p>
-          <pre id="code" aria-label="样品代码"></pre>
+          <p class="label">1 · 源 SOP（YAML）</p>
+          <pre id="rule-sop"></pre>
+          <p class="path" id="rule-source"></p>
         </div>
         <div class="panel min-w-0">
-          <div class="summary" id="summary" aria-live="polite"></div>
-          <ul class="checks" id="checks"></ul>
+          <p class="label">2 · 编译后的规则文件</p>
+          <pre id="rule-compiled"></pre>
+          <p class="path" id="rule-enforcement"></p>
+        </div>
+        <div class="panel min-w-0">
+          <p class="label">3 · 机器断言（rules.json）</p>
+          <pre id="rule-check"></pre>
+          <p class="path">由 verify_rules.py 在 CI 中执行</p>
         </div>
       </div>
+    </section>
+
+    <section class="section" aria-labelledby="gates-title">
+      <div class="section-head">
+        <h2 id="gates-title">闸门记录</h2>
+        <p>每次提交都会重算：文档写的与 Agent 读到的必须完全一致，否则构建失败。</p>
+      </div>
+      <p class="summary" id="gate-summary"></p>
+      <ul class="gates" id="gate-list"></ul>
+    </section>
+
+    <section class="section" aria-labelledby="artifact-title">
+      <div class="section-head">
+        <h2 id="artifact-title">流水线真实产物</h2>
+        <p id="pipeline-note"></p>
+      </div>
+      <div class="tabs" id="artifact-tabs" role="group" aria-label="选择产物"></div>
+      <div class="panel min-w-0">
+        <p class="label" id="artifact-name"></p>
+        <p class="artifact-note" id="artifact-note"></p>
+        <pre id="artifact-excerpt"></pre>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="market-title">
+      <div class="section-head">
+        <h2 id="market-title">市场证据（G3 实测）</h2>
+        <p>REQ-001-B 要求前排必须有交互式工具落地页，否则弃用关键词。下表是逐词实测结果。</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>关键词</th><th>交互工具</th><th>前排代表结果</th><th>判定</th></tr>
+          </thead>
+          <tbody id="market-body"></tbody>
+        </table>
+      </div>
+      <p class="note-block">规则层面全部通过；但前排工具普遍免费、免注册、浏览器本地处理，说明通用赛道已饱和。建议收窄到中文扫描技术文档的表格与公式保真。</p>
     </section>
 
     <section class="section" aria-labelledby="ledger-title">
       <div class="section-head">
         <h2 id="ledger-title">契约账本</h2>
-        <p>数字来自编译产物与闸门快照；规则版本 <span id="version" class="mono"></span></p>
+        <p>规则版本 <span id="version" class="mono"></span>，数字来自编译产物。</p>
       </div>
       <div class="ledger" id="ledger"></div>
     </section>
 
-    <section class="section" aria-labelledby="artifact-title">
-      <div class="two-col">
-        <div class="min-w-0">
-          <h2 id="artifact-title">自动产物</h2>
-          <p class="muted">选品通过后，流水线自动生成 PRD 与两份检查单。</p>
-          <ul class="artifacts" id="artifacts"></ul>
-        </div>
-        <div class="min-w-0">
-          <h2>接入方式</h2>
-          <p class="muted">三条命令，把这套规则装进你的项目。</p>
-          <pre class="commands">python Knowledge-OS/tools/compile_rules.py
+    <section class="section" aria-labelledby="use-title">
+      <div class="section-head">
+        <h2 id="use-title">接入方式</h2>
+        <p>三条命令，把这套规则装进你的项目。</p>
+      </div>
+      <pre class="commands">python Knowledge-OS/tools/compile_rules.py
 python Knowledge-OS/tools/verify_all.py --with-pipeline
 python Knowledge-OS/tools/verify_rules.py --product &lt;你的产品目录&gt;</pre>
-        </div>
-      </div>
     </section>
 
     <footer>
       <span>数据生成于 <span id="generated" class="mono"></span></span>
-      <span>规则体检 · 单一事实源</span>
+      <span>单一事实源 · 每次 push 自动重建</span>
     </footer>
   </div>
 
@@ -79,104 +112,95 @@ python Knowledge-OS/tools/verify_rules.py --product &lt;你的产品目录&gt;</
         return;
       }
 
+      function el(tag, cls, text) {
+        var node = document.createElement(tag);
+        if (cls) node.className = cls;
+        if (text !== undefined) node.textContent = text;
+        return node;
+      }
+
       document.getElementById('headline').textContent = data.headline;
       document.getElementById('subhead').textContent = data.subhead;
       document.getElementById('version').textContent = data.rules_version;
       document.getElementById('generated').textContent = data.generated_at;
       document.getElementById('badge').textContent =
-        data.ledger[0].value + ' 条规则 / ' + data.checks.length + ' 条硬约束 / ' +
+        data.ledger[0].value + ' 条规则 / ' + data.ledger[4].value + ' 条机器断言 / ' +
         data.gates.pass + ' 道闸门通过';
+      document.getElementById('gate-summary').textContent =
+        data.gates.pass + ' 通过 / ' + data.gates.fail + ' 失败';
 
       var ledger = document.getElementById('ledger');
       data.ledger.forEach(function (item) {
-        var cell = document.createElement('div');
-        cell.className = 'cell';
-        var label = document.createElement('p');
-        label.className = 'label';
-        label.textContent = item.label;
-        var value = document.createElement('p');
-        value.className = 'value';
-        var num = document.createElement('span');
-        num.className = 'mono';
-        num.textContent = item.value;
-        var unit = document.createElement('span');
-        unit.className = 'unit';
-        unit.textContent = item.unit;
-        value.appendChild(num);
-        value.appendChild(unit);
-        cell.appendChild(label);
+        var cell = el('div', 'cell');
+        var value = el('p', 'value');
+        value.appendChild(el('span', 'mono', String(item.value)));
+        value.appendChild(el('span', 'unit', item.unit));
+        cell.appendChild(el('p', 'label', item.label));
         cell.appendChild(value);
         ledger.appendChild(cell);
       });
 
-      var artifacts = document.getElementById('artifacts');
-      data.artifacts.forEach(function (item) {
-        var li = document.createElement('li');
-        var name = document.createElement('span');
-        name.className = 'mono';
-        name.textContent = item.name;
-        var note = document.createElement('span');
-        note.className = 'note';
-        note.textContent = item.note;
-        li.appendChild(name);
-        li.appendChild(note);
-        artifacts.appendChild(li);
+      var gateList = document.getElementById('gate-list');
+      data.gates.items.forEach(function (item) {
+        var li = el('li', 'gate-row');
+        li.appendChild(el('span', 'gate-group', item.group));
+        li.appendChild(el('span', 'gate-dot ' + (item.ok ? 'pass' : 'fail')));
+        li.appendChild(el('span', 'gate-name', item.name));
+        li.appendChild(el('span', 'gate-detail', item.detail || '—'));
+        gateList.appendChild(li);
       });
 
-      var checks = document.getElementById('checks');
-      var summary = document.getElementById('summary');
-      var code = document.getElementById('code');
-      var goodBtn = document.getElementById('btn-good');
-      var badBtn = document.getElementById('btn-bad');
+      var marketBody = document.getElementById('market-body');
+      data.market.forEach(function (row) {
+        var tr = el('tr');
+        tr.appendChild(el('td', 'mono', row.keyword));
+        tr.appendChild(el('td', 'mono', row.interactive));
+        tr.appendChild(el('td', 'examples', row.examples));
+        tr.appendChild(el('td', 'verdict', row.verdict));
+        marketBody.appendChild(tr);
+      });
 
-      function render(mode) {
-        var isGood = mode === 'good';
-        goodBtn.classList.toggle('active', isGood);
-        badBtn.classList.toggle('active', !isGood);
-        goodBtn.setAttribute('aria-pressed', String(isGood));
-        badBtn.setAttribute('aria-pressed', String(!isGood));
-        code.textContent = isGood ? data.code_good : data.code_bad;
+      document.getElementById('pipeline-note').textContent =
+        data.pipeline.candidate_count + ' 个通过词 → ' + data.pipeline.prd_count +
+        ' 份 PRD（最高分 ' + data.pipeline.top_score + '：' + data.pipeline.top_keyword + '）';
 
-        checks.textContent = '';
-        var counts = { PASS: 0, FAIL: 0, SKIP: 0 };
-        data.checks.forEach(function (item) {
-          var status = isGood ? item.good_status : item.bad_status;
-          counts[status] = (counts[status] || 0) + 1;
-
-          var li = document.createElement('li');
-          li.className = 'check-row';
-          var dot = document.createElement('span');
-          dot.className = 'dot ' + status.toLowerCase();
-          dot.setAttribute('aria-hidden', 'true');
-          var id = document.createElement('code');
-          id.textContent = item.id;
-          var assertion = document.createElement('span');
-          assertion.className = 'assertion';
-          assertion.textContent = item.assertion;
-          var chip = document.createElement('span');
-          chip.className = 'chip ' + status.toLowerCase();
-          chip.textContent = status;
-          li.appendChild(dot);
-          li.appendChild(id);
-          li.appendChild(assertion);
-          li.appendChild(chip);
-
-          if (!isGood && item.bad_detail) {
-            var detail = document.createElement('span');
-            detail.className = 'detail';
-            detail.textContent = item.bad_detail;
-            li.appendChild(detail);
-          }
-          checks.appendChild(li);
+      function makeTabs(container, items, callback) {
+        items.forEach(function (item, index) {
+          var button = el('button', index === 0 ? 'active' : '', item.id || item.name);
+          button.type = 'button';
+          button.setAttribute('aria-pressed', String(index === 0));
+          button.addEventListener('click', function () {
+            Array.prototype.forEach.call(container.children, function (child) {
+              child.classList.remove('active');
+              child.setAttribute('aria-pressed', 'false');
+            });
+            button.classList.add('active');
+            button.setAttribute('aria-pressed', 'true');
+            callback(item);
+          });
+          container.appendChild(button);
         });
-
-        summary.textContent = counts.PASS + ' 通过 / ' + counts.FAIL + ' 失败 / ' + counts.SKIP + ' 跳过';
-        summary.className = 'summary ' + (counts.FAIL ? 'bad' : 'good');
       }
 
-      goodBtn.addEventListener('click', function () { render('good'); });
-      badBtn.addEventListener('click', function () { render('bad'); });
-      render('good');
+      function renderRule(rule) {
+        document.getElementById('rule-sop').textContent = rule.sop;
+        document.getElementById('rule-compiled').textContent = rule.compiled;
+        document.getElementById('rule-check').textContent =
+          JSON.stringify(rule.check, null, 2);
+        document.getElementById('rule-source').textContent = rule.source;
+        document.getElementById('rule-enforcement').textContent =
+          rule.enforcement + ' · 由 check_rules 守卫生成物字节一致';
+      }
+      makeTabs(document.getElementById('rule-tabs'), data.rules, renderRule);
+      if (data.rules.length) renderRule(data.rules[0]);
+
+      function renderArtifact(artifact) {
+        document.getElementById('artifact-name').textContent = artifact.name;
+        document.getElementById('artifact-note').textContent = artifact.note;
+        document.getElementById('artifact-excerpt').textContent = artifact.excerpt;
+      }
+      makeTabs(document.getElementById('artifact-tabs'), data.artifacts, renderArtifact);
+      if (data.artifacts.length) renderArtifact(data.artifacts[0]);
     })();
   </script>
 </body>
