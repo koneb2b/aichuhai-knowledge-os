@@ -103,7 +103,7 @@ cd showcase && python -m http.server 3220      # 打开 http://localhost:3220
 
 页面中的 PASS/FAIL 由 `verify_rules.py` 对两套夹具真实扫描得出，不是写死的演示数字。
 
-`.github/workflows/pages.yml` 在每次 push 到 `main` 时自动生成数据并发布到 GitHub Pages：`https://koneb2b.github.io/aichuhai-knowledge-os/`。若仓库尚未启用 Pages，请在 Settings → Pages 把 Source 设为 GitHub Actions。
+`.github/workflows/pages.yml` 在每次 push 到 `main` 时自动生成数据并发布到 GitHub Pages：`https://koneb2b.github.io/aichuhai-knowledge-os/`。仓库已启用 Pages（`build_type: workflow`）；若换仓库部署，需在 Settings → Pages 把 Source 设为 GitHub Actions。
 
 ## 目录结构
 
