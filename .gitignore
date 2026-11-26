@@ -15,3 +15,9 @@ Knowledge-OS/.obsidian/workspace.json
 
 # 工具输出（可由 tools/run_pipeline.py 重跑生成）
 Knowledge-OS/tools/output/
+
+# 本地看板（数据快照由 tools/viewer_data.py 生成）
+viewer/.next/
+viewer/out/
+viewer/public/data/
+viewer/*.tsbuildinfo
