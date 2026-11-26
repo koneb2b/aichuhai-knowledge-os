@@ -120,7 +120,37 @@ def run():
     if extra:
         test(f"额外域: {extra}", True)
 
-    # 6. 统计汇总
+    # 6. 机器可读规则索引 (rules.json)
+    print("\n[6] 机器可读规则索引 (rules.json)")
+    rules_json_path = GENERATED_DIR / "rules.json"
+    test("rules.json 存在", rules_json_path.exists(), str(rules_json_path))
+    if rules_json_path.exists():
+        try:
+            payload = json.loads(rules_json_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            test("rules.json 可解析", False, str(exc))
+        else:
+            test("rules.json 可解析", True)
+            test("schema_version = 1", payload.get("schema_version") == 1,
+                 f"实际: {payload.get('schema_version')}")
+            test("rules.json 规则数 = manifest 声明数",
+                 len(payload.get("rules", [])) == manifest["total_rules"],
+                 f"实际={len(payload.get('rules', []))}, 声明={manifest['total_rules']}")
+            test("rules.json 覆盖全部规则 ID",
+                 {rule.get("id") for rule in payload.get("rules", [])} == all_ids,
+                 "与生成文件解析出的 ID 集合不一致")
+            test("rules.json 域数量 = 规则文件数",
+                 len(payload.get("domains", [])) == len(manifest["generated_files"]),
+                 f"实际={len(payload.get('domains', []))}")
+            required = ("id", "domain", "priority", "enforcement",
+                        "overridable", "rule", "check", "source")
+            incomplete = [
+                rule.get("id") for rule in payload.get("rules", [])
+                if not all(key in rule for key in required)
+            ]
+            test("每条规则含看板所需字段", not incomplete, f"缺失: {incomplete[:3]}")
+
+    # 7. 统计汇总
     print("\n" + "=" * 60)
     print(f"  测试结果: {PASS} 通过, {FAIL} 失败 / {PASS + FAIL} 总计")
     print("=" * 60)
