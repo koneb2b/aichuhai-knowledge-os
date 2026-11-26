@@ -9,96 +9,60 @@
 <body>
   <div class="shell">
     <header class="hero">
-      <p class="eyebrow">KNOWLEDGE-OS · VERIFIED ARTIFACTS</p>
+      <p class="eyebrow">KNOWLEDGE-OS · 真实案例与交付物</p>
       <h1 id="headline"></h1>
       <p class="subhead" id="subhead"></p>
       <p class="badge" id="badge"></p>
     </header>
 
-    <section class="section" aria-labelledby="journey-title">
+    <section class="section" aria-labelledby="risk-title">
       <div class="section-head">
-        <h2 id="journey-title">一条规则的三段旅程</h2>
-        <p>从人写的 SOP，到 AI Agent 读到的文件，再到机器可执行的断言。点规则切换，内容全部来自本仓库真实文件。</p>
+        <h2 id="risk-title">三类高频事故，提交前就被拦下</h2>
+        <p>这些不是演示用的假场景：每条都对应一条真实规则，规则来自团队踩过的坑。</p>
       </div>
-      <div class="tabs" id="rule-tabs" role="group" aria-label="选择规则"></div>
-      <div class="journey">
-        <div class="panel min-w-0">
-          <p class="label">1 · 源 SOP（YAML）</p>
-          <pre id="rule-sop"></pre>
-          <p class="path" id="rule-source"></p>
-        </div>
-        <div class="panel min-w-0">
-          <p class="label">2 · 编译后的规则文件</p>
-          <pre id="rule-compiled"></pre>
-          <p class="path" id="rule-enforcement"></p>
-        </div>
-        <div class="panel min-w-0">
-          <p class="label">3 · 机器断言（rules.json）</p>
-          <pre id="rule-check"></pre>
-          <p class="path">由 verify_rules.py 在 CI 中执行</p>
-        </div>
-      </div>
+      <div class="cards" id="scenarios"></div>
     </section>
 
-    <section class="section" aria-labelledby="gates-title">
+    <section class="section" aria-labelledby="deliver-title">
       <div class="section-head">
-        <h2 id="gates-title">闸门记录</h2>
-        <p>每次提交都会重算：文档写的与 Agent 读到的必须完全一致，否则构建失败。</p>
-      </div>
-      <p class="summary" id="gate-summary"></p>
-      <ul class="gates" id="gate-list"></ul>
-    </section>
-
-    <section class="section" aria-labelledby="artifact-title">
-      <div class="section-head">
-        <h2 id="artifact-title">流水线真实产物</h2>
+        <h2 id="deliver-title">给它一个关键词，拿到能直接用的东西</h2>
         <p id="pipeline-note"></p>
       </div>
-      <div class="tabs" id="artifact-tabs" role="group" aria-label="选择产物"></div>
-      <div class="panel min-w-0">
-        <p class="label" id="artifact-name"></p>
-        <p class="artifact-note" id="artifact-note"></p>
-        <pre id="artifact-excerpt"></pre>
-      </div>
+      <div class="cards" id="artifacts"></div>
     </section>
 
     <section class="section" aria-labelledby="market-title">
       <div class="section-head">
-        <h2 id="market-title">市场证据（G3 实测）</h2>
-        <p>REQ-001-B 要求前排必须有交互式工具落地页，否则弃用关键词。下表是逐词实测结果。</p>
+        <h2 id="market-title">市场实测：搜索结果里到底有没有对手</h2>
+        <p>按 REQ-001-B 逐词核验前排结果是否为交互式工具落地页，下面是占比。</p>
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>关键词</th><th>交互工具</th><th>前排代表结果</th><th>判定</th></tr>
-          </thead>
-          <tbody id="market-body"></tbody>
-        </table>
-      </div>
-      <p class="note-block">规则层面全部通过；但前排工具普遍免费、免注册、浏览器本地处理，说明通用赛道已饱和。建议收窄到中文扫描技术文档的表格与公式保真。</p>
+      <div class="market" id="market"></div>
+      <p class="conclusion">4 个词全部通过规则判定，但前排普遍免费、免注册、浏览器本地处理——通用赛道已经饱和。真正的机会在中文扫描技术文档的表格与公式保真。</p>
     </section>
 
     <section class="section" aria-labelledby="ledger-title">
       <div class="section-head">
-        <h2 id="ledger-title">契约账本</h2>
-        <p>规则版本 <span id="version" class="mono"></span>，数字来自编译产物。</p>
+        <h2 id="ledger-title">这套系统此刻的真实规模</h2>
+        <p>规则版本 <span id="version" class="mono"></span>；每次提交重新核验文档与产物是否一致。</p>
       </div>
       <div class="ledger" id="ledger"></div>
+      <p class="gate-summary" id="gate-summary"></p>
     </section>
 
-    <section class="section" aria-labelledby="use-title">
-      <div class="section-head">
-        <h2 id="use-title">接入方式</h2>
-        <p>三条命令，把这套规则装进你的项目。</p>
-      </div>
-      <pre class="commands">python Knowledge-OS/tools/compile_rules.py
+    <section class="section cta">
+      <h2>把护栏装进你的项目</h2>
+      <p>三条命令完成编译、全链路校验与产品仓扫描。</p>
+      <details>
+        <summary>查看技术接入命令</summary>
+        <pre class="commands">python Knowledge-OS/tools/compile_rules.py
 python Knowledge-OS/tools/verify_all.py --with-pipeline
 python Knowledge-OS/tools/verify_rules.py --product &lt;你的产品目录&gt;</pre>
+      </details>
     </section>
 
     <footer>
       <span>数据生成于 <span id="generated" class="mono"></span></span>
-      <span>单一事实源 · 每次 push 自动重建</span>
+      <span>全部内容来自仓库真实文件 · 每次 push 自动重建</span>
     </footer>
   </div>
 
@@ -124,10 +88,13 @@ python Knowledge-OS/tools/verify_rules.py --product &lt;你的产品目录&gt;</
       document.getElementById('version').textContent = data.rules_version;
       document.getElementById('generated').textContent = data.generated_at;
       document.getElementById('badge').textContent =
-        data.ledger[0].value + ' 条规则 / ' + data.ledger[4].value + ' 条机器断言 / ' +
-        data.gates.pass + ' 道闸门通过';
+        data.ledger[0].value + ' 条规则 / ' + data.ledger[2].value + ' 条硬约束 / ' +
+        data.gates.pass + ' 道闸门全绿';
       document.getElementById('gate-summary').textContent =
-        data.gates.pass + ' 通过 / ' + data.gates.fail + ' 失败';
+        '闸门状态：' + data.gates.pass + ' 通过 / ' + data.gates.fail + ' 失败';
+      document.getElementById('pipeline-note').textContent =
+        data.pipeline.candidate_count + ' 个通过词 → ' + data.pipeline.prd_count +
+        ' 份 PRD，最高机会分 ' + data.pipeline.top_score + '（' + data.pipeline.top_keyword + '）';
 
       var ledger = document.getElementById('ledger');
       data.ledger.forEach(function (item) {
@@ -140,67 +107,65 @@ python Knowledge-OS/tools/verify_rules.py --product &lt;你的产品目录&gt;</
         ledger.appendChild(cell);
       });
 
-      var gateList = document.getElementById('gate-list');
-      data.gates.items.forEach(function (item) {
-        var li = el('li', 'gate-row');
-        li.appendChild(el('span', 'gate-group', item.group));
-        li.appendChild(el('span', 'gate-dot ' + (item.ok ? 'pass' : 'fail')));
-        li.appendChild(el('span', 'gate-name', item.name));
-        li.appendChild(el('span', 'gate-detail', item.detail || '—'));
-        gateList.appendChild(li);
+      var scenarios = document.getElementById('scenarios');
+      data.scenarios.forEach(function (item) {
+        var card = el('article', 'card');
+        card.appendChild(el('p', 'card-kicker', item.id));
+        card.appendChild(el('h3', '', item.title));
+        card.appendChild(el('p', 'risk', '风险：' + item.risk));
+
+        var compare = el('div', 'compare');
+        var without = el('div', 'outcome without');
+        without.appendChild(el('p', 'outcome-label', '没有这套规则'));
+        without.appendChild(el('p', 'outcome-text', item.without));
+        var withRule = el('div', 'outcome with');
+        withRule.appendChild(el('p', 'outcome-label', '有这套规则'));
+        withRule.appendChild(el('p', 'outcome-text', item.with));
+        compare.appendChild(without);
+        compare.appendChild(withRule);
+        card.appendChild(compare);
+
+        var details = el('details', 'technical');
+        details.appendChild(el('summary', '', '技术依据（给工程师看）'));
+        var pre = el('pre', '', item.detail.source + '\n\n' + item.detail.sop + '\n\n' +
+          item.detail.compiled + '\n\n' + JSON.stringify(item.detail.check, null, 2));
+        details.appendChild(pre);
+        card.appendChild(details);
+        scenarios.appendChild(card);
       });
 
-      var marketBody = document.getElementById('market-body');
+      var artifacts = document.getElementById('artifacts');
+      data.artifacts.forEach(function (item) {
+        var card = el('article', 'card');
+        card.appendChild(el('p', 'card-kicker', item.kind));
+        card.appendChild(el('h3', '', item.name));
+        card.appendChild(el('p', 'muted', item.note));
+        var list = el('ul', 'highlights');
+        item.highlights.forEach(function (line) { list.appendChild(el('li', '', line)); });
+        card.appendChild(list);
+        var details = el('details', 'technical');
+        details.appendChild(el('summary', '', '查看原文节选'));
+        details.appendChild(el('pre', '', item.detail));
+        card.appendChild(details);
+        artifacts.appendChild(card);
+      });
+
+      var market = document.getElementById('market');
       data.market.forEach(function (row) {
-        var tr = el('tr');
-        tr.appendChild(el('td', 'mono', row.keyword));
-        tr.appendChild(el('td', 'mono', row.interactive));
-        tr.appendChild(el('td', 'examples', row.examples));
-        tr.appendChild(el('td', 'verdict', row.verdict));
-        marketBody.appendChild(tr);
+        var item = el('div', 'market-row');
+        var head = el('div', 'market-head');
+        head.appendChild(el('span', 'mono', row.keyword));
+        head.appendChild(el('span', 'ratio', row.interactive));
+        var bar = el('div', 'bar');
+        var fill = el('div', 'bar-fill');
+        fill.style.width = row.percent + '%';
+        bar.appendChild(fill);
+        item.appendChild(head);
+        item.appendChild(bar);
+        item.appendChild(el('p', 'examples', row.examples));
+        item.appendChild(el('p', 'verdict', 'REQ-001-B：' + row.verdict));
+        market.appendChild(item);
       });
-
-      document.getElementById('pipeline-note').textContent =
-        data.pipeline.candidate_count + ' 个通过词 → ' + data.pipeline.prd_count +
-        ' 份 PRD（最高分 ' + data.pipeline.top_score + '：' + data.pipeline.top_keyword + '）';
-
-      function makeTabs(container, items, callback) {
-        items.forEach(function (item, index) {
-          var button = el('button', index === 0 ? 'active' : '', item.id || item.name);
-          button.type = 'button';
-          button.setAttribute('aria-pressed', String(index === 0));
-          button.addEventListener('click', function () {
-            Array.prototype.forEach.call(container.children, function (child) {
-              child.classList.remove('active');
-              child.setAttribute('aria-pressed', 'false');
-            });
-            button.classList.add('active');
-            button.setAttribute('aria-pressed', 'true');
-            callback(item);
-          });
-          container.appendChild(button);
-        });
-      }
-
-      function renderRule(rule) {
-        document.getElementById('rule-sop').textContent = rule.sop;
-        document.getElementById('rule-compiled').textContent = rule.compiled;
-        document.getElementById('rule-check').textContent =
-          JSON.stringify(rule.check, null, 2);
-        document.getElementById('rule-source').textContent = rule.source;
-        document.getElementById('rule-enforcement').textContent =
-          rule.enforcement + ' · 由 check_rules 守卫生成物字节一致';
-      }
-      makeTabs(document.getElementById('rule-tabs'), data.rules, renderRule);
-      if (data.rules.length) renderRule(data.rules[0]);
-
-      function renderArtifact(artifact) {
-        document.getElementById('artifact-name').textContent = artifact.name;
-        document.getElementById('artifact-note').textContent = artifact.note;
-        document.getElementById('artifact-excerpt').textContent = artifact.excerpt;
-      }
-      makeTabs(document.getElementById('artifact-tabs'), data.artifacts, renderArtifact);
-      if (data.artifacts.length) renderArtifact(data.artifacts[0]);
     })();
   </script>
 </body>
