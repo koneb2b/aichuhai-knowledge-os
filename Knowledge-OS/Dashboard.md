@@ -32,7 +32,7 @@
 | SEO/GEO SOP | 标签 | 最后更新 |
 |---------|------|---------|
 | [pSEO灰度风控与Google-Scaled-Content-Abuse规约SOP](04-SEO-GEO/02-pSEO灰度风控与Google-Scaled-Content-Abuse规约SOP.md) | pSEO, SpamBrain, 灰度, IndexNow | 2026-08-13 |
-| [GEO优化与IndexNow极速收录SOP](04-SEO-GEO/03-生成式引擎优化(GEO)与IndexNow极速收录SOP.md) | SEO, GEO, IndexNow, llms.txt, Schema | 2026-08-13 |
+| [GEO优化与IndexNow极速收录SOP](<04-SEO-GEO/03-生成式引擎优化(GEO)与IndexNow极速收录SOP.md>) | SEO, GEO, IndexNow, llms.txt, Schema | 2026-08-13 |
 
 ---
 

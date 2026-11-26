@@ -1,5 +1,7 @@
 ---
 title: "选品评估报告：pdf to markdown ai"
+id: "EVAL-001"
+version: "1.0.0"
 category: "01-Requirements"
 domain: "requirements"
 status: "active"

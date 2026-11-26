@@ -1,6 +1,8 @@
 ---
 title: "PRD模板：AI Micro-SaaS 产品需求文档"
 id: "PRD-TPL-001"
+version: "1.0.0"
+category: "01-Requirements"
 domain: "requirements"
 status: "template"
 last_updated: "2026-08-13"
@@ -9,7 +11,7 @@ usage: "选品通过后（Opportunity Score >= 3.5），复制本模板填写。
 
 # PRD 模板：AI Micro-SaaS 产品需求文档
 
-> **适用流程**：选品通过（[01-KGR](01-KGR长尾词挖掘与微SaaS逆向选品SOP.md) 阶梯 + [02-Opportunity](02-Opportunity-Score选品与商业意图分析SOP.md) 评分 ≥ 3.5）→ 填写本模板 → 照 [工程规则](03-Engineering-Assets/01-Stripe与LemonSqueezy防伪造Webhook安全SOP.md) 开发。
+> **适用流程**：选品通过（[01-KGR](01-KGR长尾词挖掘与微SaaS逆向选品SOP.md) 阶梯 + [02-Opportunity](02-Opportunity-Score选品与商业意图分析SOP.md) 评分 ≥ 3.5）→ 填写本模板 → 照 [工程规则](../03-Engineering-Assets/01-Stripe与LemonSqueezy防伪造Webhook安全SOP.md) 开发。
 > **自动化**：`python Knowledge-OS/tools/run_pipeline.py keywords.csv --all` 可自动生成此模板的初稿。
 
 ---
