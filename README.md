@@ -92,6 +92,17 @@ npm run build && npm run start              # 生产预览
 
 本地等价复现：`python Knowledge-OS/tools/verify_all.py --with-pipeline`（7 阶段，含断言扫描器回归测试）。产品仓代码出现后可用 `--product <目录>` 追加 9 条 BLOCK 断言的真实扫描。
 
+## 客户展示页（showcase/）
+
+一页看懂项目价值：点「合规样品 / 违规样品」，直接看到 9 条 BLOCK 断言的结果变化；账本数字与产物数量全部来自真实生成物。
+
+```bash
+python showcase/demo-data.py                    # 从规则/闸门/夹具生成 data.js
+cd showcase && python -m http.server 3220      # 打开 http://localhost:3220
+```
+
+页面中的 PASS/FAIL 由 `verify_rules.py` 对两套夹具真实扫描得出，不是写死的演示数字。
+
 ## 目录结构
 
 ```
