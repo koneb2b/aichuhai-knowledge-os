@@ -69,7 +69,8 @@ def doc_inventory():
 def latest_updated():
     dates = []
     for path in sorted(KB_DIR.rglob("*.md")):
-        if "07-Agent-Rules" in path.parts or path.name == "Dashboard.md":
+        # 生成物 (tools/output) 与规则产物不代表 SOP 版本日期。
+        if any(part in EXCLUDED_DIRS for part in path.parts) or path.name == "Dashboard.md":
             continue
         text = path.read_text(encoding="utf-8")
         front = re.search(r"^---\s*\n(.*?)\n---", text, re.DOTALL)
