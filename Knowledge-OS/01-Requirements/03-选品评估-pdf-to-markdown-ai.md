@@ -8,9 +8,9 @@ status: "active"
 evaluated_against: "REQ-001-A / REQ-001-B (requirements-rules.md)"
 opportunity_score: 6.0
 threshold: 3.5
-verdict: "CONDITIONAL PASS - 评分达标，但需先通过 G1-G4 商业闸门（见审计报告第 14 章）"
+verdict: "CONDITIONAL PASS — G3 SERP 实测通过；通用赛道已证实饱和，建议收窄至 CJK 扫描技术文档，仍待 G1/G2/G4"
 implementation_status: "skeleton-only (12 dirs / 0 files)"
-last_updated: "2026-11-17"
+last_updated: "2026-11-26"
 ---
 
 # 选品评估报告：pdf to markdown ai
@@ -63,8 +63,30 @@ last_updated: "2026-11-17"
 
 - G1：20 次真实目标用户访谈（记录原话）
 - G2：5 个用户预付（真实收款，非意向）
-- G3：用 Ahrefs 真实导出替换演示 CSV，并复核 SERP 前 10
+- G3：已用网络实测复核 4 个通过词的搜索结果形态（见第 6 节）；Ahrefs 真实导出仍待补齐
 - G4：单位经济模型（按最坏档位算毛利，含击穿页数）
+
+## 6. G3 搜索结果实测（2026-11-26）
+
+方法：对 4 个通过词做实时网络检索，取返回的前 8-10 条结果，按「是否为可直接上传/拖拽使用的交互式工具落地页」分类。
+**证据等级说明**：这是搜索快照，不是 Ahrefs/Semrush 导出，也不保证与任意地区/时刻的 Google 前 5 完全一致；只作为方向与形态证据，不能替代 G3 的付费 keyword 数据。
+
+| 关键词 | 交互工具落地页 | 代表结果 | REQ-001-B 判定 |
+|---|---|---|---|
+| pdf to markdown ocr free | 7/8 | markdownpdf.app、litedoc.xyz、markitdown.tech/pdf-to-markdown、file2markdown.ai、fastocr.org、markdowntools.io、paddleocr.io | PASS（工具充足，不予弃用） |
+| pdf to markdown tables online | 9/10 | pdftechno.com、mathpix.com/pdf-to-markdown、doctomd.com、llm2doc.app、craftmarkdown.com、kolmopdf.com、mdutil.com、pdf24.org、pdfmarkdown.app | PASS |
+| pdf to markdown for notion | 3/10（其余为指南/博客） | iyonm.com、pdf-to-md.app 的 Notion 指南页、blazedocs.io | PASS（存在交互工具，不满足"缺乏"的弃用条件） |
+| pdf to markdown chinese OCR | 4/9（其余为教程/API） | mv.tools/zh/tools/pdf-to-markdown、17nas.com 中文 OCR、elysiatools.com 扫描 OCR、apify inkbridge actor | PASS |
+
+**逐词结论**：4 个词的前排均存在交互式 Web 工具落地页，REQ-001-B 的弃用条件均未触发，关键词不被剔除。G3 的形态验证通过。
+
+**但竞争情报给出了相反的商业信号**：
+
+- "免费、免注册、浏览器本地处理、无页数上限"已是标配（markdownpdf.app、markdowntools.io、llm2doc.app、craftmarkdown.com、17nas.com 等均这样宣称）。原 Funnel 中"免登录预览 → 付费墙"的差异化不成立。
+- 已有多家在收钱：BlazeDocs $9.99/月起、file2markdown.ai Pro $15/月、KolmoPDF 按页计费；付费点集中在 scanned OCR、批量、表格/公式保真。
+- CJK 扫描件与复杂版面是相对不那么拥挤的缝隙，但已有 PaddleOCR、pdfmark（Docling+MinerU 本地）、17NAS、Apify actor、elysiatools 占位；不存在空白市场。
+
+**据此的专业建议（不代替 G1/G2）**：不要按当前 PRD 启动"通用 PDF→Markdown 转换器"。若要继续，必须先用 G1 访谈与 G2 预付确认用户是否为「中文/繁体扫描技术文档的表格与公式保真」愿意付费；若答案是否，则应放弃该产品方向，而不是换一套 UI 重做同一个红海工具。
 
 通过后的脚手架生成要求：
 
