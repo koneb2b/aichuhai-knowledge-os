@@ -94,14 +94,14 @@ npm run build && npm run start              # 生产预览
 
 ## 客户展示页（showcase/）
 
-一页看懂项目价值：源 SOP → 编译规则 → 机器断言三段对照、10 道闸门记录、真实 PRD/部署/运营检查单节选、G3 市场证据表。所有内容来自仓库真实文件，不含合成夹具。
+一页看懂项目价值：三类真实事故的「有 / 无护栏」对照、可直接使用的 PRD 与检查单亮点、G3 市场实测条形图、契约账本。技术原文收进折叠区，默认不展示代码。
 
 ```bash
 python showcase/demo-data.py                    # 从规则/闸门/夹具生成 data.js
 cd showcase && python -m http.server 3220      # 打开 http://localhost:3220
 ```
 
-`demo-data.py` 从 `rules.json`、现场闸门校验、流水线产物与选品报告派生数据；每次 push 到 `main` 自动重建并发布。
+`demo-data.py` 从规则、闸门校验、流水线产物与选品报告派生数据；每次 push 到 `main` 自动重建并发布。
 
 `.github/workflows/pages.yml` 在每次 push 到 `main` 时自动生成数据并发布到 GitHub Pages：`https://koneb2b.github.io/aichuhai-knowledge-os/`。仓库已启用 Pages（`build_type: workflow`）；若换仓库部署，需在 Settings → Pages 把 Source 设为 GitHub Actions。
 
